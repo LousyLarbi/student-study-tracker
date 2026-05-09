@@ -1,0 +1,3127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>LearnMate – Student Study Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+</head>
+<body>
+
+<div id="phone">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar dark" id="status-bar">
+    <span class="status-time" id="status-time">9:41</span>
+    <div class="status-icons">
+      <span>●●●</span>
+      <span>WiFi</span>
+      <span>🔋</span>
+      <span id="music-indicator" style="display:none; animation: pulse 1s infinite;">🎵</span>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: LOGIN
+       =========================== -->
+  <div class="screen active" id="screen-login">
+    <div class="login-hero">
+      <div id="login-slideshow" style="width: 100%; position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <!-- Slide 1 -->
+        <div class="login-slide active" data-index="0">
+          <div class="login-logo">📚</div>
+          <div class="login-app-name">LearnMate</div>
+          <div class="login-tagline">Your personal study tracker &amp; learning companion</div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="login-slide" data-index="1" style="display: none;">
+          <div class="login-logo">📝</div>
+          <div class="login-app-name">Track Progress</div>
+          <div class="login-tagline">Log your study sessions and watch your performance grow</div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="login-slide" data-index="2" style="display: none;">
+          <div class="login-logo">👨‍🏫</div>
+          <div class="login-app-name">Collaborate</div>
+          <div class="login-tagline">Connect with teachers, take exams, and get feedback</div>
+        </div>
+      </div>
+      
+      <div class="login-dots">
+        <div class="login-dot active" onclick="setSlide(0)"></div>
+        <div class="login-dot" onclick="setSlide(1)"></div>
+        <div class="login-dot" onclick="setSlide(2)"></div>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="login-card-title">Welcome back</div>
+      <div class="login-card-sub">Sign in to continue your learning journey</div>
+      <div style="font-size: 11px; color: var(--text3); margin-top: -8px; margin-bottom: 16px;">Created by <b>Lois Efua Asubonteng Ahenfo</b></div>
+
+      <div class="login-tabs">
+        <div class="login-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</div>
+        <div class="login-tab" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</div>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login-form-section">
+        <!-- Role selector (only in signup) -->
+        <div id="role-selector" style="display:none; margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px;">I am a...</div>
+          <div class="role-selector">
+            <div class="role-btn active" id="role-student" onclick="setRole('student')">
+              <span class="role-icon">🎓</span>Student
+            </div>
+            <div class="role-btn" id="role-teacher" onclick="setRole('teacher')">
+              <span class="role-icon">👩‍🏫</span>Teacher
+            </div>
+            <div class="role-btn" id="role-admin" onclick="setRole('admin')">
+              <span class="role-icon">⚙️</span>Admin
+            </div>
+          </div>
+        </div>
+
+        <div id="signup-name" style="display:none;">
+          <div class="login-field">
+            <label>Full name</label>
+            <input type="text" id="f-name" placeholder="Your full name" />
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>Email address</label>
+          <input type="email" id="f-email" placeholder="enteryouremail@gmail.com" />
+        </div>
+        <div class="login-field">
+          <label>Password</label>
+          <input type="password" id="f-password" placeholder="••••••••" />
+        </div>
+
+        <button class="btn-primary" id="auth-btn" onclick="handleAuth()" style="margin-top:4px;">Sign In</button>
+      </div>
+
+      <!-- Email Verification Form -->
+      <div id="verification-form-section" style="display:none;">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:48px;margin-bottom:12px;">📧</div>
+          <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;">Verification required</div>
+          <div style="font-size:12px;color:var(--text2);" id="verification-email-text">Your verification code is below</div>
+        </div>
+        
+        <!-- Verification Code Display -->
+        <div id="verification-code-display" style="background:var(--brand-light);border:2px solid var(--brand);border-radius:var(--radius-md);padding:16px;text-align:center;margin-bottom:16px;display:none;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:500;">VERIFICATION CODE:</div>
+          <div id="displayed-code" style="font-size:28px;font-weight:700;color:var(--brand);letter-spacing:4px;font-family:monospace;">000000</div>
+        </div>
+        
+        <div class="login-field">
+          <label>Enter verification code</label>
+          <input type="text" id="f-verification-code" placeholder="000000" maxlength="6" style="text-align:center;font-size:20px;letter-spacing:8px;font-weight:600;" />
+        </div>
+        <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;">
+          Press Enter after typing the code, or tap "Verify & Continue" below.
+        </div>
+        <div style="font-size:12px;color:var(--text2);text-align:center;margin-bottom:14px;">
+          Didn't receive it? <span style="color:var(--brand);cursor:pointer;font-weight:500;" onclick="resendVerificationCode()">Resend</span>
+        </div>
+        <button id="verify-code-btn" class="btn-primary" onclick="verifyEmailCode()" style="margin-top:4px;">Verify &amp; Continue</button>
+        <button style="width:100%;padding:12px;background:transparent;color:var(--brand);border:1px solid var(--brand-mid);border-radius:var(--radius-md);font-size:14px;font-weight:500;font-family:var(--font-body);cursor:pointer;margin-top:8px;" onclick="goBackToEmailEntry()">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: ADMIN DASHBOARD
+       =========================== -->
+  <div class="screen" id="screen-admin">
+    <div class="dash-hero" style="background: linear-gradient(160deg, #1e1b4b 0%, #312e81 100%);">
+      <div class="dash-top">
+        <div>
+          <div class="dash-greeting" style="color:rgba(255,255,255,0.7);">Administrator Portal</div>
+          <div class="dash-name" id="admin-name" style="color:#fff;">Admin</div>
+        </div>
+        <div class="dash-avatar" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.2);">⚙️</div>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="a-stat-students" style="color:#fff;">0</div>
+          <div class="dash-stat-label" style="color:rgba(255,255,255,0.6);">Students</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="a-stat-teachers" style="color:#fff;">0</div>
+          <div class="dash-stat-label" style="color:rgba(255,255,255,0.6);">Teachers</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="a-stat-exams" style="color:#fff;">0</div>
+          <div class="dash-stat-label" style="color:rgba(255,255,255,0.6);">Exams</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <div class="section-label">System Overview</div>
+      <div class="quick-grid">
+        <div class="qa-card" onclick="goTo('monitor-students-admin')">
+          <div class="qa-icon green">🎓</div>
+          <div class="qa-card-title">Monitor Students</div>
+          <div class="qa-card-sub">Check student study logs</div>
+        </div>
+        <div class="qa-card" onclick="goTo('monitor-teachers-admin')">
+          <div class="qa-icon amber">👩‍🏫</div>
+          <div class="qa-card-title">Monitor Teachers</div>
+          <div class="qa-card-sub">Check teacher activities</div>
+        </div>
+        <div class="qa-card" onclick="goTo('system-logs')">
+          <div class="qa-icon blue">📋</div>
+          <div class="qa-card-title">System Stats</div>
+          <div class="qa-card-sub">Global platform analytics</div>
+        </div>
+        <div class="qa-card" onclick="goTo('messages')">
+          <div class="qa-icon indigo">💬</div>
+          <div class="qa-card-title">Broadcast</div>
+          <div class="qa-card-sub">Message all users</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="navTo('admin')">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Home</div>
+      </div>
+      <div class="nav-item" onclick="navTo('settings')">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: SYSTEM LOGS (ADMIN)
+       =========================== -->
+  <div class="screen" id="screen-system-logs">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">System Analytics</div>
+    </div>
+    <div class="dash-body">
+      <div class="chart-card">
+        <div class="chart-card-title">User Distribution</div>
+        <div id="admin-user-chart" style="padding: 10px 0;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Activity Overview</div>
+        <div id="admin-activity-stats" style="padding: 10px 0;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: MONITOR STUDENTS (ADMIN)
+       =========================== -->
+  <div class="screen" id="screen-monitor-students-admin">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Student Progress</div>
+    </div>
+    <div class="dash-body">
+      <div id="admin-students-list"></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: MONITOR TEACHERS (ADMIN)
+       =========================== -->
+  <div class="screen" id="screen-monitor-teachers-admin">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Teacher Activities</div>
+    </div>
+    <div class="dash-body">
+      <div id="admin-teachers-list"></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: TEACHER DASHBOARD
+       =========================== -->
+  <div class="screen" id="screen-teacher">
+    <div class="dash-hero">
+      <div class="dash-top">
+        <div>
+          <div class="dash-greeting">Welcome, Teacher</div>
+          <div class="dash-name" id="teacher-name">Professor</div>
+        </div>
+        <div class="dash-avatar" id="teacher-avatar">👨‍🏫</div>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="t-stat-students">0</div>
+          <div class="dash-stat-label">Students</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="t-stat-exams">0</div>
+          <div class="dash-stat-label">Exams</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="t-stat-submissions">0</div>
+          <div class="dash-stat-label">Pending Marks</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <div class="section-label">Teacher Actions</div>
+      <div class="quick-grid">
+        <div class="qa-card" onclick="goTo('exam-upload')">
+          <div class="qa-icon blue">📝</div>
+          <div class="qa-card-title">Upload Exam</div>
+          <div class="qa-card-sub">Create new assessment</div>
+        </div>
+        <div class="qa-card" onclick="goTo('mark-exams')">
+          <div class="qa-icon amber">✅</div>
+          <div class="qa-card-title">Mark Exams</div>
+          <div class="qa-card-sub">Grade student answers</div>
+        </div>
+        <div class="qa-card" onclick="goTo('monitor-progress')">
+          <div class="qa-icon green">📊</div>
+          <div class="qa-card-title">Monitor Progress</div>
+          <div class="qa-card-sub">View student stats</div>
+        </div>
+        <div class="qa-card" onclick="goTo('messages')">
+          <div class="qa-icon indigo">💬</div>
+          <div class="qa-card-title">Messages</div>
+          <div class="qa-card-sub">Chat with students</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="navTo('teacher')">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Home</div>
+      </div>
+      <div class="nav-item" onclick="navTo('settings')">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: EXAM UPLOAD
+       =========================== -->
+  <div class="screen" id="screen-exam-upload">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Create Exam</div>
+    </div>
+    <div class="form-scroll" style="padding: 16px;">
+      <div class="field-group">
+        <label class="field-label">Exam Title</label>
+        <input class="field-input" type="text" id="exam-title" placeholder="e.g. Mid-term Math Exam" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Subject</label>
+        <input class="field-input" type="text" id="exam-subject" placeholder="e.g. Mathematics" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Time Limit (minutes)</label>
+        <input class="field-input" type="number" id="exam-time-limit" placeholder="e.g. 60" min="1" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Upload Exam Document (Word/Text)</label>
+        <input type="file" id="exam-file" accept=".doc,.docx,.txt" style="font-size: 12px; margin-top: 4px;" />
+        <div style="font-size: 10px; color: var(--text3); margin-top: 4px;">Tutors can upload a document for students to read.</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Question / Instructions</label>
+        <textarea class="field-textarea" id="exam-question" placeholder="Enter additional instructions here..." style="height: 100px;"></textarea>
+      </div>
+      <button class="btn-primary" onclick="uploadExam()">Upload Exam</button>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: STUDENT EXAMS
+       =========================== -->
+  <div class="screen" id="screen-student-exams">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Exams & Assessments</div>
+    </div>
+    <div class="dash-body">
+      <div class="section-label">Available Exams</div>
+      <div id="available-exams-list"></div>
+      
+      <div class="section-label" style="margin-top: 24px;">My Results</div>
+      <div id="student-results-list"></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: EXAM ANSWER
+       =========================== -->
+  <div class="screen" id="screen-exam-answer">
+    <div class="topbar">
+      <div class="topbar-back" onclick="confirmExitExam()">&#8592;</div>
+      <div class="topbar-title" id="answer-exam-title">Answer Exam</div>
+      <div id="exam-timer" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--red); font-family: monospace; font-size: 16px;">00:00</div>
+    </div>
+    <div class="form-scroll" style="padding: 16px;">
+      <div id="exam-doc-display" style="display:none; background: #f9fafb; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 12px; font-size: 13px; color: #374151;">
+        <div style="font-weight:600; margin-bottom:4px; font-size:11px; color:var(--text3);">UPLOADED DOCUMENT:</div>
+        <div id="exam-doc-content"></div>
+      </div>
+      <div id="exam-content" style="background: var(--surface); padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border);"></div>
+      
+      <div class="field-group">
+        <label class="field-label">Your Answer (Word Interface)</label>
+        <!-- Simple Rich Text Toolbar -->
+        <div style="display: flex; gap: 4px; background: #f3f4f6; padding: 8px; border: 1px solid var(--border); border-bottom: none; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+          <button onclick="execCmd('bold')" title="Bold" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;"><b>B</b></button>
+          <button onclick="execCmd('italic')" title="Italic" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;"><i>I</i></button>
+          <button onclick="execCmd('underline')" title="Underline" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;"><u>U</u></button>
+          <button onclick="execCmd('insertUnorderedList')" title="Bullet List" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">• List</button>
+          <button onclick="execCmd('justifyLeft')" title="Align Left" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">⫷</button>
+          <button onclick="execCmd('justifyCenter')" title="Align Center" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">≣</button>
+        </div>
+        <div id="student-answer-editor" contenteditable="true" style="min-height: 300px; max-height: 500px; overflow-y: auto; background: white; padding: 16px; border: 1px solid var(--border); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; outline: none; font-family: 'Times New Roman', serif; line-height: 1.6; color: #111827;"></div>
+      </div>
+      <button id="submit-exam-btn" class="btn-primary" onclick="submitExam()">Submit Answer</button>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: MARK EXAMS
+       =========================== -->
+  <div class="screen" id="screen-mark-exams">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Mark Submissions</div>
+    </div>
+    <div class="dash-body">
+      <div id="pending-submissions-list"></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: MONITOR PROGRESS
+       =========================== -->
+  <div class="screen" id="screen-monitor-progress">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Monitor Students</div>
+    </div>
+    <div class="dash-body">
+      <div id="students-progress-list"></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: CHAT ROOM
+       =========================== -->
+  <div class="screen" id="screen-chat-room">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title" id="chat-with-name">Chat</div>
+    </div>
+    <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;"></div>
+    <div style="padding: 16px; background: var(--surface); border-top: 1px solid var(--border); display: flex; gap: 8px;">
+      <input type="text" id="chat-input" placeholder="Type a message..." style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 20px; outline: none;" />
+      <button onclick="sendChatMessage()" style="width: 44px; height: 44px; border-radius: 50%; background: var(--brand); color: white; border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;">🚀</button>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: DASHBOARD
+       =========================== -->
+  <div class="screen" id="screen-dashboard">
+    <div class="dash-hero">
+      <div class="dash-top">
+        <div>
+          <div class="dash-greeting" id="dash-greeting">Good morning,</div>
+          <div class="dash-name" id="dash-name">Student</div>
+        </div>
+        <div class="dash-avatar" id="dash-avatar" onclick="toggleAvatarDropdown()">S</div>
+        <div class="avatar-dropdown" id="avatar-dropdown" style="display:none; position:absolute; top:60px; right:20px; background:white; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:12px; min-width:200px; z-index:1000;">
+          <div class="dropdown-email" id="dropdown-email" style="font-size:14px; color:#666; margin-bottom:8px;">user@email.com</div>
+          <button class="dropdown-signout" onclick="logout()" style="width:100%; padding:8px; background:#ef4444; color:white; border:none; border-radius:6px; font-size:14px; cursor:pointer;">Sign Out</button>
+        </div>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="stat-total">0</div>
+          <div class="dash-stat-label">Sessions</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="stat-hours">0h</div>
+          <div class="dash-stat-label">Studied</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-val" id="stat-streak">0</div>
+          <div class="dash-stat-label">Day streak</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <!-- Quick actions -->
+      <div class="section-label" style="margin-bottom:10px;">Quick actions</div>
+      <div class="quick-grid">
+        <div class="qa-card" onclick="goTo('add')">
+          <div class="qa-icon indigo">📝</div>
+          <div class="qa-card-title">Add record</div>
+          <div class="qa-card-sub">Log a study session</div>
+        </div>
+        <div class="qa-card" onclick="goTo('records')">
+          <div class="qa-icon green">📋</div>
+          <div class="qa-card-title">View records</div>
+          <div class="qa-card-sub">Browse your history</div>
+        </div>
+        <div class="qa-card" onclick="goTo('performance')">
+          <div class="qa-icon amber">📊</div>
+          <div class="qa-card-title">Performance</div>
+          <div class="qa-card-sub">Track your progress</div>
+        </div>
+        <div class="qa-card" onclick="goTo('messages')">
+          <div class="qa-icon blue">💬</div>
+          <div class="qa-card-title">Messages</div>
+          <div class="qa-card-sub">Chat with teachers</div>
+        </div>
+        <div class="qa-card" onclick="goTo('student-exams')">
+          <div class="qa-icon violet">📝</div>
+          <div class="qa-card-title">Exams</div>
+          <div class="qa-card-sub">Take assessments</div>
+        </div>
+      </div>
+
+      <!-- This week -->
+      <div class="week-card">
+        <div class="week-header">
+          <div class="week-title">This week</div>
+          <div class="week-range" id="week-range">–</div>
+        </div>
+        <div class="week-bars" id="week-bars"></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Good</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Average</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Low</div>
+        </div>
+      </div>
+
+      <!-- Recent sessions -->
+      <div class="section-label">Recent sessions</div>
+      <div class="recent-list" id="recent-list"></div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="navTo('dashboard')">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Home</div>
+      </div>
+      <div class="nav-item" onclick="navTo('records')">
+        <div class="nav-icon">📋</div>
+        <div class="nav-label">Records</div>
+      </div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;">
+        <div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div>
+        <div class="nav-label" style="color:var(--brand);">Add</div>
+      </div>
+      <div class="nav-item" onclick="navTo('performance')">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Stats</div>
+      </div>
+      <div class="nav-item" onclick="navTo('settings')">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: ADD RECORD
+       =========================== -->
+  <div class="screen" id="screen-add">
+    <div class="status-bar light">
+      <span class="status-time" id="status-time-add">9:41</span>
+      <div class="status-icons" style="color:var(--text);">
+        <span>●●●</span><span>🔋</span>
+      </div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Add study record</div>
+      <div class="topbar-action" onclick="clearForm()">Clear</div>
+    </div>
+
+    <div class="form-scroll">
+      <div class="field-group">
+        <label class="field-label">Subject *</label>
+        <select class="field-select" id="f-subject">
+          <option value="">Select or type below...</option>
+          <option>Mathematics</option>
+          <option>Science</option>
+          <option>English Language</option>
+          <option>History</option>
+          <option>Geography</option>
+          <option>Physics</option>
+          <option>Chemistry</option>
+          <option>Biology</option>
+          <option>Computer Science</option>
+          <option>Economics</option>
+          <option>Literature</option>
+          <option>Art</option>
+          <option>Music</option>
+          <option>Physical Education</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Custom subject (if "Other" above)</label>
+        <input class="field-input" type="text" id="f-custom-subject" placeholder="e.g. French Language" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Topic *</label>
+        <input class="field-input" type="text" id="f-topic" placeholder="e.g. Quadratic equations" />
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label class="field-label">Duration (minutes) *</label>
+          <input class="field-input" type="number" id="f-duration" placeholder="60" min="1" max="480" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Date *</label>
+          <input class="field-input" type="date" id="f-date" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Performance level</label>
+        <div class="perf-selector">
+          <div class="perf-btn" id="pb-green" onclick="selectPerf('green')">
+            <span class="perf-btn-icon">🟢</span>Good
+          </div>
+          <div class="perf-btn" id="pb-amber" onclick="selectPerf('amber')">
+            <span class="perf-btn-icon">🟡</span>Average
+          </div>
+          <div class="perf-btn" id="pb-red" onclick="selectPerf('red')">
+            <span class="perf-btn-icon">🔴</span>Low
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">What I learned (notes)</label>
+        <textarea class="field-textarea" id="f-notes" placeholder="Summarize what you studied today..." maxlength="400" oninput="updateCharCount(this, 'notes-count', 400)"></textarea>
+        <div class="char-count"><span id="notes-count">0</span>/400</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Study materials used</label>
+        <select class="field-select" id="f-materials">
+          <option value="">Select...</option>
+          <option>Textbook</option>
+          <option>Online video</option>
+          <option>Notes</option>
+          <option>Practice problems</option>
+          <option>Flashcards</option>
+          <option>Past papers</option>
+          <option>Teacher materials</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Mood while studying</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div class="perf-btn" id="mood-focused" onclick="selectMood('focused')" style="flex:none;padding:8px 14px;">🎯 Focused</div>
+          <div class="perf-btn" id="mood-tired" onclick="selectMood('tired')" style="flex:none;padding:8px 14px;">😴 Tired</div>
+          <div class="perf-btn" id="mood-happy" onclick="selectMood('happy')" style="flex:none;padding:8px 14px;">😊 Happy</div>
+          <div class="perf-btn" id="mood-stressed" onclick="selectMood('stressed')" style="flex:none;padding:8px 14px;">😰 Stressed</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-bottom">
+      <button class="save-btn" onclick="saveRecord()">💾 Save Study Record</button>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: VIEW RECORDS
+       =========================== -->
+  <div class="screen" id="screen-records">
+    <div class="status-bar light">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color:var(--text);"><span>●●●</span><span>🔋</span></div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">My records <span id="rec-count" class="badge" style="font-size:11px;"></span></div>
+      <div class="topbar-action" onclick="goTo('add')">+ Add</div>
+    </div>
+
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search by subject or topic..." oninput="filterRecords()" />
+      </div>
+    </div>
+
+    <div class="records-list">
+      <div class="records-list-inner" id="records-list"></div>
+    </div>
+
+    <div class="records-action-bar">
+      <div class="sel-all-btn" onclick="toggleSelectAll()">Select all</div>
+      <button class="del-btn" id="del-btn" onclick="openDeleteModal()" disabled>Delete selected</button>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="navTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+      <div class="nav-item active" onclick="navTo('records')"><div class="nav-icon">📋</div><div class="nav-label">Records</div></div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;"><div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div><div class="nav-label" style="color:var(--brand);">Add</div></div>
+      <div class="nav-item" onclick="navTo('performance')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+      <div class="nav-item" onclick="navTo('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: PERFORMANCE
+       =========================== -->
+  <div class="screen" id="screen-performance">
+    <div class="status-bar light">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color:var(--text);"><span>●●●</span><span>🔋</span></div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Performance</div>
+    </div>
+
+    <div class="perf-body">
+      <div class="perf-summary-grid">
+        <div class="perf-summary-card">
+          <div class="perf-summary-label">Total sessions</div>
+          <div class="perf-summary-val" id="p-sessions">0</div>
+          <div class="perf-summary-sub neutral">all time</div>
+        </div>
+        <div class="perf-summary-card">
+          <div class="perf-summary-label">Hours studied</div>
+          <div class="perf-summary-val" id="p-hours">0h</div>
+          <div class="perf-summary-sub neutral">all time</div>
+        </div>
+        <div class="perf-summary-card">
+          <div class="perf-summary-label">This week</div>
+          <div class="perf-summary-val" id="p-week">0</div>
+          <div class="perf-summary-sub neutral">sessions</div>
+        </div>
+        <div class="perf-summary-card">
+          <div class="perf-summary-label">Best subject</div>
+          <div class="perf-summary-val" id="p-best" style="font-size:16px;line-height:1.3;">–</div>
+          <div class="perf-summary-sub up" id="p-best-sub"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="flex-between">
+          <div class="chart-card-title">Sessions this week</div>
+          <div id="perf-week-range" style="font-size:11px;color:var(--text2);"></div>
+        </div>
+        <div class="bar-chart" id="perf-bar-chart"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-title">Subject breakdown</div>
+        <div id="subject-breakdown"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-title">Performance history</div>
+        <div id="perf-history-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="navTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+      <div class="nav-item" onclick="navTo('records')"><div class="nav-icon">📋</div><div class="nav-label">Records</div></div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;"><div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div><div class="nav-label" style="color:var(--brand);">Add</div></div>
+      <div class="nav-item active" onclick="navTo('performance')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+      <div class="nav-item" onclick="navTo('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: MESSAGES
+       =========================== -->
+  <div class="screen" id="screen-messages">
+    <div class="status-bar light">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color:var(--text);"><span>●●●</span><span>🔋</span></div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Messages</div>
+      <div class="topbar-action" id="broadcast-action" onclick="openBroadcastUI()" style="display:none;">📢 Broadcast</div>
+    </div>
+
+    <div class="chat-list">
+      <div id="chat-list-inner"></div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="navTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+      <div class="nav-item" onclick="navTo('records')"><div class="nav-icon">📋</div><div class="nav-label">Records</div></div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;"><div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div><div class="nav-label" style="color:var(--brand);">Add</div></div>
+      <div class="nav-item" onclick="navTo('performance')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+      <div class="nav-item" onclick="navTo('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: BROADCAST (TEACHER/ADMIN)
+       =========================== -->
+  <div class="screen" id="screen-broadcast">
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Send Broadcast</div>
+    </div>
+    <div class="form-scroll" style="padding: 16px;">
+      <div style="background: var(--brand-light); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: var(--brand-dark);">
+        📢 Your message will be sent to <b>everyone</b> on the platform.
+      </div>
+      <div class="field-group">
+        <label class="field-label">Message Content</label>
+        <textarea class="field-textarea" id="broadcast-input" placeholder="Type your broadcast message here..." style="height: 150px;"></textarea>
+      </div>
+      <button class="btn-primary" onclick="sendBroadcast()">Send to All</button>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: SETTINGS
+       =========================== -->
+  <div class="screen" id="screen-settings">
+    <div class="status-bar light">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color:var(--text);"><span>●●●</span><span>🔋</span></div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Settings</div>
+    </div>
+
+    <div class="settings-body">
+      <!-- Profile card -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:20px;font-weight:600;color:var(--brand);" id="profile-avatar">S</div>
+        <div style="flex:1;">
+          <div style="font-size:16px;font-weight:500;color:var(--text);" id="profile-name">Student</div>
+          <div style="font-size:12px;color:var(--text2);" id="profile-email">student@learnmate.app</div>
+          <div style="margin-top:4px;"><span style="font-size:10px;background:var(--brand-light);color:var(--brand);padding:2px 8px;border-radius:10px;font-weight:500;">Student</span></div>
+        </div>
+        <div style="font-size:13px;color:var(--brand);font-weight:500;cursor:pointer;" onclick="showToast('Edit profile coming soon!')">Edit</div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Appearance</div>
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="settings-row-icon" style="background:#FEF3C7;">🌙</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Dark mode</div>
+              <div class="settings-row-sub">Switch to dark theme</div>
+            </div>
+            <div class="toggle" id="toggle-dark" onclick="toggleDarkMode(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-icon" style="background:#EDE9FE;">🔡</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Text size</div>
+              <div class="settings-row-sub">Adjust font size</div>
+            </div>
+            <div class="settings-row-right" onclick="cycleTextSize()" style="cursor:pointer;">Medium ›</div>
+          </div>
+          <div style="padding:10px 16px 14px;border-bottom:1px solid var(--border);">
+            <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:10px;">Color theme</div>
+            <div class="theme-row">
+              <div class="theme-dot active" style="background:#4F46E5;" onclick="setTheme('#4F46E5','#3730A3',this)" title="Indigo"></div>
+              <div class="theme-dot" style="background:#059669;" onclick="setTheme('#059669','#065F46',this)" title="Emerald"></div>
+              <div class="theme-dot" style="background:#DC2626;" onclick="setTheme('#DC2626','#991B1B',this)" title="Red"></div>
+              <div class="theme-dot" style="background:#D97706;" onclick="setTheme('#D97706','#92400E',this)" title="Amber"></div>
+              <div class="theme-dot" style="background:#7C3AED;" onclick="setTheme('#7C3AED','#5B21B6',this)" title="Violet"></div>
+              <div class="theme-dot" style="background:#0891B2;" onclick="setTheme('#0891B2','#0E7490',this)" title="Cyan"></div>
+            </div>
+          </div>
+          <div class="settings-row" onclick="cycleEmoji()">
+            <div class="settings-row-icon" style="background:#D1FAE5;">🖼</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Custom app icon</div>
+              <div class="settings-row-sub">Personalize your icon</div>
+            </div>
+            <div class="settings-row-right">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Privacy &amp; Security</div>
+        <div class="settings-group">
+          <div class="settings-row" onclick="openPrivacyModal()">
+            <div class="settings-row-icon" style="background:#DBEAFE;">🔒</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Privacy settings</div>
+              <div class="settings-row-sub">Control who sees your data</div>
+            </div>
+            <div class="settings-row-right">›</div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-icon" style="background:#FEE2E2;">🔔</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Notifications</div>
+              <div class="settings-row-sub">Study reminders &amp; alerts</div>
+            </div>
+            <div class="toggle on" id="toggle-notif" onclick="toggleNotifications(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-icon" style="background:#EDE9FE;">🛡</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Two-factor auth</div>
+              <div class="settings-row-sub">Extra account security</div>
+            </div>
+            <div class="toggle" id="toggle-2fa" onclick="toggleTwoFactor(this)"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Data &amp; Backup</div>
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="settings-row-icon" style="background:#D1FAE5;">☁️</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Auto backup</div>
+              <div class="settings-row-sub">Backup data automatically</div>
+            </div>
+            <div class="toggle on" id="toggle-backup" onclick="toggleAutoBackup(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row" onclick="performBackup(); showToast('Manual backup completed!')">
+            <div class="settings-row-icon" style="background:#FEF3C7;">💾</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Manual backup</div>
+              <div class="settings-row-sub">Back up your data now</div>
+            </div>
+            <div class="settings-row-right">›</div>
+          </div>
+          <div class="settings-row" onclick="showExportModal()">
+            <div class="settings-row-icon" style="background:#DBEAFE;">📤</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Export records</div>
+              <div class="settings-row-sub">Download as CSV</div>
+            </div>
+            <div class="settings-row-right">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Relaxation</div>
+        <div class="settings-group">
+          <div class="settings-row" onclick="goTo('music')">
+            <div class="settings-row-icon" style="background:#D1FAE5;">🎵</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Study music</div>
+              <div class="settings-row-sub">Calm focus music (5x/day)</div>
+            </div>
+            <div class="settings-row-right">3/5 ›</div>
+          </div>
+          <div class="settings-row" onclick="goTo('creative')">
+            <div class="settings-row-icon" style="background:#EDE9FE;">🎨</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">Creative space</div>
+              <div class="settings-row-sub">Art & relaxation tools</div>
+            </div>
+            <div class="settings-row-right">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Account</div>
+        <div class="settings-group">
+          <div class="settings-row" onclick="openAboutModal()">
+            <div class="settings-row-icon" style="background:#F3F4F6;">ℹ️</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title">About LearnMate</div>
+              <div class="settings-row-sub">Version 1.0.0</div>
+            </div>
+            <div class="settings-row-right">›</div>
+          </div>
+          <div class="settings-row" onclick="openLogoutModal()">
+            <div class="settings-row-icon" style="background:#FEE2E2;">🚪</div>
+            <div class="settings-row-info">
+              <div class="settings-row-title" style="color:var(--red);">Sign out</div>
+              <div class="settings-row-sub">Log out of your account</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="navTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+      <div class="nav-item" onclick="navTo('records')"><div class="nav-icon">📋</div><div class="nav-label">Records</div></div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;"><div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div><div class="nav-label" style="color:var(--brand);">Add</div></div>
+      <div class="nav-item" onclick="navTo('performance')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+      <div class="nav-item active" onclick="navTo('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: MUSIC
+       =========================== -->
+  <div class="screen" id="screen-music">
+    <div class="status-bar light">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color:var(--text);"><span>●●●</span><span>🔋</span></div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Study Music</div>
+    </div>
+
+    <div class="music-body">
+      <div style="text-align:center;padding:20px 16px;">
+        <div style="font-size:48px;margin-bottom:12px;">🎵</div>
+        <div style="font-size:16px;font-weight:500;color:var(--text);margin-bottom:4px;">Relaxing Study Music</div>
+        <div style="font-size:12px;color:var(--text2);">Focus-enhancing ambient tracks</div>
+      </div>
+
+      <div class="music-tracks">
+        <div class="music-track" onclick="playTrack('focus')">
+          <div class="track-icon">🎼</div>
+          <div class="track-info">
+            <div class="track-title">Deep Focus</div>
+            <div class="track-artist">Ambient Sounds</div>
+          </div>
+          <div class="track-play" id="play-focus">▶️</div>
+        </div>
+        
+        <div class="music-track" onclick="playTrack('rain')">
+          <div class="track-icon">🌧️</div>
+          <div class="track-info">
+            <div class="track-title">Rain Sounds</div>
+            <div class="track-artist">Nature</div>
+          </div>
+          <div class="track-play" id="play-rain">▶️</div>
+        </div>
+        
+        <div class="music-track" onclick="playTrack('lofi')">
+          <div class="track-icon">🎧</div>
+          <div class="track-info">
+            <div class="track-title">Lo-Fi Beats</div>
+            <div class="track-artist">Chill Vibes</div>
+          </div>
+          <div class="track-play" id="play-lofi">▶️</div>
+        </div>
+        
+        <div class="music-track" onclick="playTrack('ocean')">
+          <div class="track-icon">🌊</div>
+          <div class="track-info">
+            <div class="track-title">Ocean Waves</div>
+            <div class="track-artist">Nature</div>
+          </div>
+          <div class="track-play" id="play-ocean">▶️</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;text-align:center;">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">Sessions used today: 3/5</div>
+        <div style="font-size:10px;color:var(--text3);">🎵 Generated ambient sounds for focus & relaxation</div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="navTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+      <div class="nav-item" onclick="navTo('records')"><div class="nav-icon">📋</div><div class="nav-label">Records</div></div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;"><div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div><div class="nav-label" style="color:var(--brand);">Add</div></div>
+      <div class="nav-item" onclick="navTo('performance')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+      <div class="nav-item" onclick="navTo('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       SCREEN: CREATIVE
+       =========================== -->
+  <div class="screen" id="screen-creative">
+    <div class="status-bar light">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color:var(--text);"><span>●●●</span><span>🔋</span></div>
+    </div>
+    <div class="topbar">
+      <div class="topbar-back" onclick="goBack()">&#8592;</div>
+      <div class="topbar-title">Creative Space</div>
+    </div>
+
+    <div class="creative-body">
+      <div style="text-align:center;padding:20px 16px;">
+        <div style="font-size:48px;margin-bottom:12px;">🎨</div>
+        <div style="font-size:16px;font-weight:500;color:var(--text);margin-bottom:4px;">Art & Relaxation</div>
+        <div style="font-size:12px;color:var(--text2);">Express yourself and unwind</div>
+      </div>
+
+      <div class="creative-tabs">
+        <div class="creative-tab active" id="tab-journal" onclick="switchCreativeTab('journal')">Journal</div>
+        <div class="creative-tab" id="tab-draw" onclick="switchCreativeTab('draw')">Draw</div>
+        <div class="creative-tab" id="tab-meditate" onclick="switchCreativeTab('meditate')">Meditate</div>
+      </div>
+
+      <div id="creative-journal" class="creative-content active">
+        <div style="padding:16px;">
+          <textarea id="journal-text" placeholder="Write your thoughts, ideas, or reflections here... Express yourself freely. This is your safe space." style="width:100%;height:200px;border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;font-size:14px;font-family:var(--font-body);color:var(--text);background:var(--surface);resize:none;"></textarea>
+          <button class="btn-primary" onclick="saveJournal()" style="margin-top:12px;width:100%;">Save Entry</button>
+        </div>
+      </div>
+
+      <div id="creative-draw" class="creative-content">
+        <div style="padding:16px;text-align:center;">
+          <div style="font-size:14px;color:var(--text2);margin-bottom:16px;">Simple drawing canvas (coming soon)</div>
+          <div style="width:100%;height:200px;background:var(--surface);border:2px dashed var(--border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px;">
+            🎨 Drawing tools will be available here
+          </div>
+        </div>
+      </div>
+
+      <div id="creative-meditate" class="creative-content">
+        <div style="padding:16px;text-align:center;">
+          <div style="font-size:48px;margin-bottom:12px;">🧘‍♀️</div>
+          <div style="font-size:16px;font-weight:500;color:var(--text);margin-bottom:8px;">Guided Meditation</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:20px;">Take a moment to breathe and relax</div>
+          <button class="btn-primary" onclick="startMeditation()" style="margin-bottom:12px;">Start 5-Min Meditation</button>
+          <div id="meditation-timer" style="font-size:24px;font-weight:600;color:var(--brand);display:none;">05:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="navTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+      <div class="nav-item" onclick="navTo('records')"><div class="nav-icon">📋</div><div class="nav-label">Records</div></div>
+      <div class="nav-item" onclick="navTo('add')" style="position:relative;"><div style="width:48px;height:48px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,0.4);">➕</div><div class="nav-label" style="color:var(--brand);">Add</div></div>
+      <div class="nav-item" onclick="navTo('performance')"><div class="nav-icon">📊</div><div class="nav-label">Stats</div></div>
+      <div class="nav-item" onclick="navTo('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       MODALS
+       =========================== -->
+  <div class="modal-overlay" id="modal-delete">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Delete records?</div>
+      <div class="modal-sub" id="delete-modal-sub">This action cannot be undone. The selected records will be permanently removed.</div>
+      <div class="modal-btns">
+        <button class="modal-btn danger" onclick="deleteSelected()">Delete</button>
+        <button class="modal-btn cancel" onclick="closeModal('modal-delete')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-logout">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Sign out?</div>
+      <div class="modal-sub">You'll be returned to the login screen. Your data will remain saved.</div>
+      <div class="modal-btns">
+        <button class="modal-btn danger" onclick="logout()">Sign out</button>
+        <button class="modal-btn cancel" onclick="closeModal('modal-logout')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-export">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Export records</div>
+      <div class="modal-sub">Your study records will be downloaded as a CSV file that you can open in Excel or Google Sheets.</div>
+      <div class="modal-btns">
+        <button class="modal-btn" style="background:var(--brand);color:#fff;" onclick="exportCSV()">Download CSV</button>
+        <button class="modal-btn cancel" onclick="closeModal('modal-export')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-privacy">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Privacy settings</div>
+      <div class="modal-sub">Manage your data and privacy preferences.</div>
+      <div class="settings-group" style="margin:20px 0;">
+        <div class="settings-row" onclick="showDeleteAllModal()">
+          <div class="settings-row-icon" style="background:#FEE2E2;">🗑</div>
+          <div class="settings-row-info">
+            <div class="settings-row-title">Delete all data</div>
+            <div class="settings-row-sub">Permanently remove all your records</div>
+          </div>
+          <div class="settings-row-right">›</div>
+        </div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" onclick="closeModal('modal-privacy')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-delete-all">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Delete all data?</div>
+      <div class="modal-sub">This will permanently delete all your study records and cannot be undone. Your account settings will remain.</div>
+      <div class="modal-btns">
+        <button class="modal-btn danger" onclick="deleteAllData()">Delete everything</button>
+        <button class="modal-btn cancel" onclick="closeModal('modal-delete-all')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-about">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">About LearnMate</div>
+      <div class="modal-sub" style="text-align: left; line-height: 1.5; margin-top: 10px;">
+        <p><strong>LearnMate</strong> is your personal study companion designed to help students track their learning progress, manage study sessions, and achieve academic goals.</p>
+        <p style="margin-top: 8px;"><strong>Key Features:</strong></p>
+        <ul style="margin-left: 20px; margin-top: 4px;">
+          <li>📝 Log study sessions with topics and duration</li>
+          <li>📊 Track performance with visual analytics</li>
+          <li>📅 Maintain a consistent study streak</li>
+          <li>🎵 Focus with built-in study music</li>
+          <li>🎨 Relax in the creative journal space</li>
+        </ul>
+        <p style="margin-top: 12px; font-size: 11px; color: var(--text3); text-align: center;">Version 1.0.0 • Empowering Students</p>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" onclick="closeModal('modal-about')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+</div><!-- /phone -->
+
+<script>
+/* ============================================================
+   LEARNMATE — Full Application JavaScript
+   ============================================================ */
+
+// ── STATE ──────────────────────────────────────────────────
+let records = [];
+let selectedIds = new Set();
+let selectedPerf = 'amber';
+let selectedMood = '';
+let currentScreen = 'login';
+let screenHistory = [];
+let userRole = 'student';
+let userName = 'Student';
+let userEmail = 'student@learnmate.app';
+let authMode = 'login'; // 'login' | 'signup'
+let verificationCode = '';
+let pendingEmail = '';
+let pendingPassword = '';
+let pendingName = '';
+let isDarkMode = false;
+let textSize = 'medium';
+let userEmoji = '👤';
+let notificationsEnabled = true;
+let twoFactorEnabled = false;
+let autoBackupEnabled = false;
+let currentSlide = 0;
+let slideInterval;
+
+// Slideshow functions
+function setSlide(index) {
+  const slides = document.querySelectorAll('.login-slide');
+  const dots = document.querySelectorAll('.login-dot');
+  
+  slides.forEach(s => s.style.display = 'none');
+  dots.forEach(d => d.classList.remove('active'));
+  
+  slides[index].style.display = 'flex';
+  dots[index].classList.add('active');
+  currentSlide = index;
+  
+  // Reset timer on manual click
+  clearInterval(slideInterval);
+  startSlideTimer();
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % 3;
+  setSlide(currentSlide);
+}
+
+function startSlideTimer() {
+  slideInterval = setInterval(nextSlide, 5000);
+}
+
+// Start slideshow on load
+document.addEventListener('DOMContentLoaded', startSlideTimer);
+
+// Student Database with Images
+const studentDatabase = {
+  'alice@learnmate.app': { name: 'Alice Johnson', image: '👩‍🎓', color: '#EC4899' },
+  'bob@learnmate.app': { name: 'Bob Smith', image: '👨‍🎓', color: '#3B82F6' },
+  'charlie@learnmate.app': { name: 'Charlie Brown', image: '👨‍🏫', color: '#8B5CF6' },
+  'diana@learnmate.app': { name: 'Diana Prince', image: '👩‍💻', color: '#F59E0B' },
+  'emma@learnmate.app': { name: 'Emma Wilson', image: '👩‍🎨', color: '#10B981' },
+  'frank@learnmate.app': { name: 'Frank Miller', image: '👨‍💼', color: '#EF4444' },
+  'grace@learnmate.app': { name: 'Grace Lee', image: '👩‍🔬', color: '#06B6D4' },
+  'henry@learnmate.app': { name: 'Henry Davis', image: '👨‍🏫', color: '#A855F7' },
+  'student@learnmate.app': { name: 'Student Learner', image: '🎓', color: '#4F46E5' },
+  'test@learnmate.app': { name: 'Test User', image: '✨', color: '#7C3AED' }
+};
+
+// ── STORAGE ────────────────────────────────────────────────
+function getUsers() {
+  try {
+    return JSON.parse(localStorage.getItem('lm_users') || '{}');
+  } catch(e) { return {}; }
+}
+
+function saveUser(email, password, name, role) {
+  const users = getUsers();
+  users[email] = { password, name, role };
+  localStorage.setItem('lm_users', JSON.stringify(users));
+}
+
+function getExams() {
+  try {
+    return JSON.parse(localStorage.getItem('lm_exams') || '[]');
+  } catch(e) { return []; }
+}
+
+function saveExam(exam) {
+  const exams = getExams();
+  exams.push(exam);
+  localStorage.setItem('lm_exams', JSON.stringify(exams));
+}
+
+function getSubmissions() {
+  try {
+    return JSON.parse(localStorage.getItem('lm_submissions') || '[]');
+  } catch(e) { return []; }
+}
+
+function saveSubmission(submission) {
+  const submissions = getSubmissions();
+  submissions.push(submission);
+  localStorage.setItem('lm_submissions', JSON.stringify(submissions));
+}
+
+function updateSubmission(updatedSub) {
+  let submissions = getSubmissions();
+  submissions = submissions.map(s => s.id === updatedSub.id ? updatedSub : s);
+  localStorage.setItem('lm_submissions', JSON.stringify(submissions));
+}
+
+function getMessages() {
+  try {
+    return JSON.parse(localStorage.getItem('lm_messages') || '[]');
+  } catch(e) { return []; }
+}
+
+function saveMessage(msg) {
+  const messages = getMessages();
+  messages.push(msg);
+  localStorage.setItem('lm_messages', JSON.stringify(messages));
+}
+
+function save() {
+  try {
+    let stored = JSON.parse(localStorage.getItem('lm_records') || '{}');
+    if (Array.isArray(stored)) {
+      stored = userEmail ? { [userEmail]: stored } : {};
+    }
+    if (userEmail) stored[userEmail] = records;
+    localStorage.setItem('lm_records', JSON.stringify(stored));
+    localStorage.setItem('lm_user', JSON.stringify({ name: userName, email: userEmail, role: userRole, darkMode: isDarkMode, textSize: textSize, emoji: userEmoji, notifications: notificationsEnabled, twoFactor: twoFactorEnabled, autoBackup: autoBackupEnabled }));
+    if (autoBackupEnabled) {
+      performBackup();
+    }
+  } catch(e) {}
+}
+function load() {
+  try {
+    const u = localStorage.getItem('lm_user');
+    if (u) {
+      const parsed = JSON.parse(u);
+      userName = parsed.name || 'Student';
+      userEmail = parsed.email || '';
+      userRole = parsed.role || 'student';
+      isDarkMode = parsed.darkMode || false;
+      textSize = parsed.textSize || 'medium';
+      userEmoji = parsed.emoji || '👤';
+      notificationsEnabled = parsed.notifications !== false;
+      twoFactorEnabled = parsed.twoFactor || false;
+      autoBackupEnabled = parsed.autoBackup || false;
+    }
+    let allRecords = JSON.parse(localStorage.getItem('lm_records') || '{}');
+    if (Array.isArray(allRecords)) {
+      if (userEmail) {
+        allRecords = { [userEmail]: allRecords };
+      } else {
+        records = allRecords;
+        return;
+      }
+    }
+    records = userEmail && allRecords[userEmail] ? allRecords[userEmail] : [];
+  } catch(e) { records = []; }
+}
+
+function loadUserRecords(email) {
+  try {
+    let allRecords = JSON.parse(localStorage.getItem('lm_records') || '{}');
+    if (Array.isArray(allRecords)) {
+      return email ? allRecords : [];
+    }
+    return email && allRecords[email] ? allRecords[email] : [];
+  } catch(e) {
+    return [];
+  }
+}
+
+// ── CLOCK ──────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const t = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  document.querySelectorAll('#status-time, #status-time-add').forEach(el => el.textContent = t);
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function goTo(screen) {
+  if (currentScreen !== screen) screenHistory.push(currentScreen);
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  currentScreen = screen;
+
+  const statusBar = document.getElementById('status-bar');
+  if (statusBar) {
+    statusBar.className = (screen === 'login' || screen === 'dashboard' || screen === 'teacher' || screen === 'admin') ? 'status-bar dark' : 'status-bar light';
+  }
+
+  if (screen === 'dashboard') renderDashboard();
+  if (screen === 'teacher') renderTeacherDashboard();
+  if (screen === 'admin') renderAdminDashboard();
+  if (screen === 'records') { renderRecords(); selectedIds.clear(); updateDelBtn(); }
+  if (screen === 'performance') renderPerformance();
+  if (screen === 'messages') renderMessages();
+  if (screen === 'settings') renderSettings();
+  if (screen === 'add') initAddForm();
+  if (screen === 'creative') renderCreative();
+  if (screen === 'student-exams') renderStudentExams();
+  if (screen === 'mark-exams') renderMarkExams();
+  if (screen === 'monitor-progress') renderMonitorProgress();
+  if (screen === 'monitor-students-admin') renderMonitorStudentsAdmin();
+  if (screen === 'monitor-teachers-admin') renderMonitorTeachersAdmin();
+  if (screen === 'system-logs') renderSystemLogsAdmin();
+}
+
+function navTo(screen) { 
+  if (screen === 'dashboard' && userRole === 'teacher') {
+    goTo('teacher');
+  } else if (screen === 'dashboard' && userRole === 'admin') {
+    goTo('admin');
+  } else {
+    goTo(screen); 
+  }
+}
+
+// ── TEACHER LOGIC ──────────────────────────────────────────
+function renderTeacherDashboard() {
+  const users = getUsers();
+  const exams = getExams();
+  const submissions = getSubmissions();
+  
+  const studentCount = Object.values(users).filter(u => u.role === 'student').length;
+  const pendingCount = submissions.filter(s => s.status === 'pending').length;
+
+  document.getElementById('teacher-name').textContent = userName;
+  document.getElementById('t-stat-students').textContent = studentCount;
+  document.getElementById('t-stat-exams').textContent = exams.length;
+  document.getElementById('t-stat-submissions').textContent = pendingCount;
+}
+
+// ── ADMIN LOGIC ───────────────────────────────────────────
+function renderAdminDashboard() {
+  const users = getUsers();
+  const exams = getExams();
+  const allUsers = Object.values(users);
+  
+  const studentCount = allUsers.filter(u => u.role === 'student').length;
+  const teacherCount = allUsers.filter(u => u.role === 'teacher').length;
+
+  document.getElementById('admin-name').textContent = userName;
+  document.getElementById('a-stat-students').textContent = studentCount;
+  document.getElementById('a-stat-teachers').textContent = teacherCount;
+  document.getElementById('a-stat-exams').textContent = exams.length;
+}
+
+function renderMonitorStudentsAdmin() {
+  // Reuse existing student progress logic but for admin
+  const users = getUsers();
+  const allRecords = JSON.parse(localStorage.getItem('lm_records') || '{}');
+  const students = Object.entries(users).filter(([email, u]) => u.role === 'student');
+  const list = document.getElementById('admin-students-list');
+
+  if (students.length === 0) {
+    list.innerHTML = '<div class="empty-state">No students registered yet</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  students.forEach(([email, u]) => {
+    const studentRecords = allRecords[email] || [];
+    const totalMins = studentRecords.reduce((a, r) => a + (r.duration || 0), 0);
+    const card = document.createElement('div');
+    card.className = 'recent-card';
+    card.innerHTML = `
+      <div class="recent-info">
+        <div class="recent-subject">${u.name}</div>
+        <div class="recent-topic">${email}</div>
+      </div>
+      <div class="recent-right">
+        <div class="recent-time">${studentRecords.length} sessions</div>
+        <div class="recent-time">${(totalMins / 60).toFixed(1)}h total</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderSystemLogsAdmin() {
+  const users = getUsers();
+  const exams = getExams();
+  const submissions = getSubmissions();
+  const allRecords = JSON.parse(localStorage.getItem('lm_records') || '{}');
+  
+  const allUsers = Object.values(users);
+  const studentCount = allUsers.filter(u => u.role === 'student').length;
+  const teacherCount = allUsers.filter(u => u.role === 'teacher').length;
+  const adminCount = allUsers.filter(u => u.role === 'admin').length;
+
+  // User Chart (Simple representation)
+  const chartEl = document.getElementById('admin-user-chart');
+  chartEl.innerHTML = `
+    <div style="display:flex; height:30px; border-radius:15px; overflow:hidden;">
+      <div style="flex:${studentCount || 1}; background:var(--brand);" title="Students"></div>
+      <div style="flex:${teacherCount || 0}; background:var(--amber);" title="Teachers"></div>
+      <div style="flex:${adminCount || 0}; background:var(--green);" title="Admins"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px;">
+      <span>🎓 Students: ${studentCount}</span>
+      <span>👩‍🏫 Teachers: ${teacherCount}</span>
+      <span>⚙️ Admins: ${adminCount}</span>
+    </div>
+  `;
+
+  // Activity Stats
+  const totalSessions = Object.values(allRecords).reduce((acc, curr) => acc + curr.length, 0);
+  const totalSubmissions = submissions.length;
+  const gradedSubmissions = submissions.filter(s => s.status === 'marked').length;
+
+  const statsEl = document.getElementById('admin-activity-stats');
+  statsEl.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:var(--text2);">Total Study Sessions</span>
+        <span style="font-weight:600;">${totalSessions}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:var(--text2);">Total Exams Uploaded</span>
+        <span style="font-weight:600;">${exams.length}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:var(--text2);">Total Submissions</span>
+        <span style="font-weight:600;">${totalSubmissions}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:var(--text2);">Graded Assessments</span>
+        <span style="font-weight:600;">${gradedSubmissions}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderMonitorTeachersAdmin() {
+  const users = getUsers();
+  const exams = getExams();
+  const submissions = getSubmissions();
+  const teachers = Object.entries(users).filter(([email, u]) => u.role === 'teacher');
+  const list = document.getElementById('admin-teachers-list');
+
+  if (teachers.length === 0) {
+    list.innerHTML = '<div class="empty-state">No teachers registered yet</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  teachers.forEach(([email, u]) => {
+    const teacherExams = exams.filter(e => e.teacherEmail === email);
+    const teacherMarked = submissions.filter(s => s.status === 'marked' && teacherExams.some(e => e.id === s.examId)).length;
+    
+    const card = document.createElement('div');
+    card.className = 'recent-card';
+    card.innerHTML = `
+      <div class="recent-info">
+        <div class="recent-subject">${u.name}</div>
+        <div class="recent-topic">${email}</div>
+      </div>
+      <div class="recent-right">
+        <div class="recent-time">${teacherExams.length} exams uploaded</div>
+        <div class="recent-time">${teacherMarked} graded submissions</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function uploadExam() {
+  const title = document.getElementById('exam-title').value.trim();
+  const subject = document.getElementById('exam-subject').value.trim();
+  const timeLimit = document.getElementById('exam-time-limit').value;
+  const question = document.getElementById('exam-question').value.trim();
+  const fileInput = document.getElementById('exam-file');
+
+  if (!title || !subject || !question || !timeLimit) {
+    showToast('Please fill all required fields');
+    return;
+  }
+
+  const exam = {
+    id: Date.now(),
+    title,
+    subject,
+    timeLimit: parseInt(timeLimit),
+    question,
+    teacherEmail: userEmail,
+    created: new Date().toISOString()
+  };
+
+  if (fileInput.files && fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    
+    if (file.name.endsWith('.docx')) {
+      reader.onload = function(e) {
+        const arrayBuffer = e.target.result;
+        mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+          .then(function(result) {
+            exam.docContent = result.value; // The generated HTML
+            saveExam(exam);
+            finishUpload();
+          })
+          .catch(function(err) {
+            console.error(err);
+            showToast('Error processing Word document');
+          });
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      reader.onload = function(e) {
+        exam.docContent = e.target.result;
+        saveExam(exam);
+        finishUpload();
+      };
+      reader.readAsText(file);
+    }
+  } else {
+    saveExam(exam);
+    finishUpload();
+  }
+
+  function finishUpload() {
+    showToast('Exam uploaded successfully!');
+    document.getElementById('exam-title').value = '';
+    document.getElementById('exam-subject').value = '';
+    document.getElementById('exam-time-limit').value = '';
+    document.getElementById('exam-question').value = '';
+    document.getElementById('exam-file').value = '';
+    goTo('teacher');
+  }
+}
+
+function renderMarkExams() {
+  const submissions = getSubmissions();
+  const pending = submissions.filter(s => s.status === 'pending');
+  const list = document.getElementById('pending-submissions-list');
+  
+  if (pending.length === 0) {
+    list.innerHTML = '<div class="empty-state">No pending submissions</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  pending.forEach(sub => {
+    const card = document.createElement('div');
+    card.className = 'recent-card';
+    card.style.flexDirection = 'column';
+    card.style.alignItems = 'flex-start';
+    card.style.gap = '8px';
+    card.innerHTML = `
+      <div style="font-weight: 600; color: var(--brand);">${sub.examTitle}</div>
+      <div style="font-size: 12px; color: var(--text2);">From: ${sub.studentName} (${sub.studentEmail})</div>
+      <div style="background: var(--surface); padding: 12px; border: 1px solid var(--border); border-radius: 4px; width: 100%; font-size: 13px; font-family: 'Times New Roman', serif; line-height: 1.5; color: #111827;">${sub.answer}</div>
+      <div style="display: flex; gap: 8px; width: 100%; margin-top: 8px;">
+        <input type="number" placeholder="Grade" id="grade-${sub.id}" style="width: 80px; padding: 8px; border: 1px solid var(--border); border-radius: 4px;" />
+        <input type="text" placeholder="Feedback" id="feedback-${sub.id}" style="flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: 4px;" />
+        <button class="btn-primary" style="width: auto; padding: 8px 16px;" onclick="markSubmission(${sub.id})">Mark</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function markSubmission(id) {
+  const grade = document.getElementById(`grade-${id}`).value;
+  const feedback = document.getElementById(`feedback-${id}`).value;
+
+  if (!grade) {
+    showToast('Please provide a grade');
+    return;
+  }
+
+  const submissions = getSubmissions();
+  const sub = submissions.find(s => s.id === id);
+  if (sub) {
+    sub.status = 'marked';
+    sub.grade = grade;
+    sub.feedback = feedback;
+    sub.markedAt = new Date().toISOString();
+    updateSubmission(sub);
+    showToast('Submission marked!');
+    renderMarkExams();
+  }
+}
+
+function renderMonitorProgress() {
+  const users = getUsers();
+  const allRecords = JSON.parse(localStorage.getItem('lm_records') || '{}');
+  const students = Object.entries(users).filter(([email, u]) => u.role === 'student');
+  const list = document.getElementById('students-progress-list');
+
+  if (students.length === 0) {
+    list.innerHTML = '<div class="empty-state">No students registered yet</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  students.forEach(([email, u]) => {
+    const studentRecords = allRecords[email] || [];
+    const totalMins = studentRecords.reduce((a, r) => a + (r.duration || 0), 0);
+    const card = document.createElement('div');
+    card.className = 'recent-card';
+    card.innerHTML = `
+      <div class="recent-info">
+        <div class="recent-subject">${u.name}</div>
+        <div class="recent-topic">${email}</div>
+      </div>
+      <div class="recent-right">
+        <div class="recent-time">${studentRecords.length} sessions</div>
+        <div class="recent-time">${(totalMins / 60).toFixed(1)}h total</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ── STUDENT EXAM LOGIC ─────────────────────────────────────
+let currentExam = null;
+let examTimerInterval = null;
+let examTimeRemaining = 0;
+
+function renderStudentExams() {
+  const exams = getExams();
+  const submissions = getSubmissions().filter(s => s.studentEmail === userEmail);
+  const availableList = document.getElementById('available-exams-list');
+  const resultsList = document.getElementById('student-results-list');
+
+  // Available Exams
+  if (exams.length === 0) {
+    availableList.innerHTML = '<div class="empty-state">No exams available</div>';
+  } else {
+    availableList.innerHTML = '';
+    exams.forEach(exam => {
+      const hasSubmitted = submissions.some(s => s.examId === exam.id);
+      const card = document.createElement('div');
+      card.className = 'qa-card';
+      card.style.width = '100%';
+      card.style.marginBottom = '10px';
+      card.style.flexDirection = 'row';
+      card.style.justifyContent = 'space-between';
+      card.style.padding = '16px';
+      card.innerHTML = `
+        <div style="flex: 1;">
+          <div class="qa-card-title">${exam.title}</div>
+          <div class="qa-card-sub">${exam.subject} • ${exam.timeLimit} mins</div>
+        </div>
+        <button class="btn-primary" style="width: auto; padding: 8px 16px;" ${hasSubmitted ? 'disabled' : ''} onclick="startExam(${exam.id})">
+          ${hasSubmitted ? 'Submitted' : 'Start'}
+        </button>
+      `;
+      availableList.appendChild(card);
+    });
+  }
+
+  // Results
+  if (submissions.length === 0) {
+    resultsList.innerHTML = '<div class="empty-state">No assessments yet</div>';
+  } else {
+    resultsList.innerHTML = '';
+    submissions.forEach(sub => {
+      const card = document.createElement('div');
+      card.className = 'recent-card';
+      card.style.flexDirection = 'column';
+      card.style.alignItems = 'flex-start';
+      card.innerHTML = `
+        <div style="font-weight: 600; color: var(--brand);">${sub.examTitle}</div>
+        <div style="background: var(--surface); padding: 8px; border-radius: 4px; width: 100%; font-size: 12px; margin-top: 8px; border: 1px solid var(--border); font-family: 'Times New Roman', serif;">${sub.answer}</div>
+        <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 8px;">
+          <span class="badge ${sub.status === 'marked' ? 'green' : 'amber'}">${sub.status.toUpperCase()}</span>
+          ${sub.grade ? `<span style="font-weight: 700; color: var(--brand);">Score: ${sub.grade}</span>` : ''}
+        </div>
+        ${sub.feedback ? `<div style="margin-top: 8px; font-style: italic; font-size: 12px; color: var(--text2);">Feedback: ${sub.feedback}</div>` : ''}
+      `;
+      resultsList.appendChild(card);
+    });
+  }
+}
+
+function startExam(id) {
+  const exams = getExams();
+  currentExam = exams.find(e => e.id === id);
+  if (currentExam) {
+    document.getElementById('answer-exam-title').textContent = currentExam.title;
+    
+    // Set up timer
+    examTimeRemaining = currentExam.timeLimit * 60;
+    updateTimerDisplay();
+    clearInterval(examTimerInterval);
+    examTimerInterval = setInterval(tickExamTimer, 1000);
+
+    // Set up doc content if any
+    const docDisplay = document.getElementById('exam-doc-display');
+    if (currentExam.docContent) {
+      docDisplay.style.display = 'block';
+      const contentEl = document.getElementById('exam-doc-content');
+      if (currentExam.docContent.includes('<p>') || currentExam.docContent.includes('<div>')) {
+        contentEl.innerHTML = currentExam.docContent;
+      } else {
+        contentEl.textContent = currentExam.docContent;
+      }
+    } else {
+      docDisplay.style.display = 'none';
+    }
+
+    document.getElementById('exam-content').innerHTML = `
+      <div style="font-weight: 600; margin-bottom: 8px;">Subject: ${currentExam.subject}</div>
+      <div>${currentExam.question}</div>
+    `;
+    
+    // Reset editor
+    const editor = document.getElementById('student-answer-editor');
+    editor.innerHTML = '';
+    editor.contentEditable = 'true';
+    document.getElementById('submit-exam-btn').disabled = false;
+    
+    goTo('exam-answer');
+  }
+}
+
+function tickExamTimer() {
+  if (examTimeRemaining > 0) {
+    examTimeRemaining--;
+    updateTimerDisplay();
+  } else {
+    clearInterval(examTimerInterval);
+    lockExam();
+    showToast('Time is up! You can no longer submit.');
+  }
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(examTimeRemaining / 60);
+  const secs = examTimeRemaining % 60;
+  const display = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  document.getElementById('exam-timer').textContent = display;
+}
+
+function lockExam() {
+  const editor = document.getElementById('student-answer-editor');
+  editor.contentEditable = 'false';
+  editor.style.background = '#f3f4f6';
+  document.getElementById('submit-exam-btn').disabled = true;
+}
+
+function execCmd(cmd) {
+  document.execCommand(cmd, false, null);
+  document.getElementById('student-answer-editor').focus();
+}
+
+function confirmExitExam() {
+  if (examTimeRemaining > 0 && !document.getElementById('submit-exam-btn').disabled) {
+    if (confirm('Warning: Exiting now will lose your progress and the timer will keep running if you return (or the exam may be locked). Are you sure?')) {
+      clearInterval(examTimerInterval);
+      goBack();
+    }
+  } else {
+    clearInterval(examTimerInterval);
+    goBack();
+  }
+}
+
+function submitExam() {
+  const editor = document.getElementById('student-answer-editor');
+  const answer = editor.innerHTML.trim();
+  
+  if (!answer || answer === '<br>') {
+    showToast('Please provide an answer before submitting');
+    return;
+  }
+
+  if (examTimeRemaining <= 0) {
+    showToast('Time is up! Submission failed.');
+    return;
+  }
+
+  const submission = {
+    id: Date.now(),
+    examId: currentExam.id,
+    examTitle: currentExam.title,
+    studentEmail: userEmail,
+    studentName: userName,
+    answer, // HTML content from editor
+    status: 'pending',
+    submittedAt: new Date().toISOString()
+  };
+
+  saveSubmission(submission);
+  clearInterval(examTimerInterval);
+  showToast('Exam submitted successfully!');
+  goTo('student-exams');
+}
+
+// ── MESSAGING LOGIC ────────────────────────────────────────
+let currentChatPartner = null;
+
+function renderMessages() {
+  const users = getUsers();
+  const list = document.getElementById('chat-list-inner');
+  const allMessages = getMessages();
+  const broadcastAction = document.getElementById('broadcast-action');
+  
+  // Role-based broadcast button visibility
+  if (userRole === 'teacher' || userRole === 'admin') {
+    broadcastAction.style.display = 'block';
+  } else {
+    broadcastAction.style.display = 'none';
+  }
+
+  // Filter users based on visibility rules
+  let otherUsers = Object.entries(users).filter(([email]) => email !== userEmail);
+
+  if (userRole === 'student') {
+    // Students cannot see Admins
+    otherUsers = otherUsers.filter(([email, u]) => u.role !== 'admin');
+  }
+
+  if (otherUsers.length === 0) {
+    list.innerHTML = '<div class="empty-state">No other users found</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  otherUsers.forEach(([email, u]) => {
+    // Get last message for this conversation (including broadcasts)
+    const conversation = allMessages.filter(m => 
+      (m.from === userEmail && m.to === email) || 
+      (m.from === email && m.to === userEmail) ||
+      (m.isBroadcast && m.to === 'all' && m.from === email)
+    );
+    const lastMsg = conversation[conversation.length - 1];
+    
+    const div = document.createElement('div');
+    div.className = 'chat-item';
+    div.onclick = () => openChat(email, u.name);
+    div.innerHTML = `
+      <div class="chat-avatar" style="background: var(--brand-light); color: var(--brand);">
+        ${u.role === 'admin' ? '⚙️' : u.role === 'teacher' ? '👨‍🏫' : '👩‍🎓'}
+      </div>
+      <div class="chat-info">
+        <div class="chat-name">${u.name} <span style="font-size: 10px; font-weight: normal; color: var(--text3);">(${u.role})</span></div>
+        <div class="chat-preview">${lastMsg ? (lastMsg.isBroadcast ? '📢 ' : '') + esc(lastMsg.text) : 'Start a conversation...'}</div>
+      </div>
+      <div class="chat-meta">
+        <div class="chat-time">${lastMsg ? fmtTime(lastMsg.time) : ''}</div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openChat(email, name) {
+  currentChatPartner = { email, name };
+  document.getElementById('chat-with-name').textContent = name;
+  renderChatMessages();
+  goTo('chat-room');
+}
+
+function openBroadcastUI() {
+  document.getElementById('broadcast-input').value = '';
+  goTo('broadcast');
+}
+
+function sendBroadcast() {
+  const text = document.getElementById('broadcast-input').value.trim();
+  if (!text) {
+    showToast('Please enter a message');
+    return;
+  }
+
+  const msg = {
+    id: Date.now(),
+    from: userEmail,
+    to: 'all',
+    text: text,
+    time: new Date().toISOString(),
+    isBroadcast: true,
+    senderName: userName,
+    senderRole: userRole
+  };
+
+  saveMessage(msg);
+  showToast('Broadcast sent to all users!');
+  goBack();
+}
+
+function renderChatMessages() {
+  const allMessages = getMessages();
+  const chatContainer = document.getElementById('chat-messages');
+  
+  // Filter messages: Direct messages between the two users OR broadcasts from the chat partner
+  const conversation = allMessages.filter(m => 
+    (m.from === userEmail && m.to === currentChatPartner.email) || 
+    (m.from === currentChatPartner.email && m.to === userEmail) ||
+    (m.isBroadcast && m.to === 'all' && m.from === currentChatPartner.email)
+  );
+
+  chatContainer.innerHTML = '';
+  conversation.forEach(m => {
+    const isMine = m.from === userEmail;
+    const msgDiv = document.createElement('div');
+    msgDiv.style.cssText = `
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      position: relative;
+      ${isMine ? 
+        'align-self: flex-end; background: var(--brand); color: white; border-bottom-right-radius: 4px;' : 
+        'align-self: flex-start; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px;'
+      }
+    `;
+    
+    let content = m.text;
+    if (m.isBroadcast) {
+      msgDiv.style.border = '1px solid var(--brand-mid)';
+      content = `<div style="font-size: 10px; font-weight: 700; margin-bottom: 2px; opacity: 0.8;">📢 BROADCAST</div>` + content;
+    }
+    
+    msgDiv.innerHTML = content;
+    chatContainer.appendChild(msgDiv);
+  });
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || !currentChatPartner) return;
+
+  const msg = {
+    from: userEmail,
+    to: currentChatPartner.email,
+    text,
+    time: new Date().toISOString()
+  };
+
+  saveMessage(msg);
+  input.value = '';
+  renderChatMessages();
+}
+
+function fmtTime(tstr) {
+  const d = new Date(tstr);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function goBack() {
+  const prev = screenHistory.pop() || 'dashboard';
+  goTo(prev);
+  screenHistory.pop(); // remove the round-trip push
+}
+
+// ── AUTH ───────────────────────────────────────────────────
+function switchAuthTab(mode) {
+  authMode = mode;
+  document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', mode === 'signup');
+  document.getElementById('role-selector').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('signup-name').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-btn').textContent = mode === 'login' ? 'Sign In' : 'Create Account';
+}
+
+function setRole(role) {
+  userRole = role;
+  ['student','teacher','admin'].forEach(r => {
+    document.getElementById('role-' + r).classList.toggle('active', r === role);
+  });
+}
+
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+function sendVerificationCode(email) {
+  // Generate code
+  verificationCode = generateVerificationCode();
+  
+  // Display code on screen
+  document.getElementById('displayed-code').textContent = verificationCode;
+  document.getElementById('verification-code-display').style.display = 'block';
+  
+  showToast(`Verification code generated for ${email}`);
+}
+
+function handleAuth() {
+  let email = document.getElementById('f-email').value.trim();
+  const password = document.getElementById('f-password').value;
+
+  if (!email) { showToast('Please enter your email'); return; }
+  if (!password) { showToast('Please enter your password'); return; }
+
+  // Normalize email to lowercase to avoid casing issues
+  email = email.toLowerCase();
+
+  // Validate email format more permissively
+  if (email.includes(' ') || email.includes('\t') || email.includes('\n')) {
+    showToast('Please enter a valid email');
+    return;
+  }
+  const atIndex = email.indexOf('@');
+  const domainPart = atIndex >= 0 ? email.slice(atIndex + 1) : '';
+  if (atIndex <= 0 || !domainPart || !domainPart.includes('.') || domainPart.startsWith('.') || domainPart.endsWith('.')) {
+    showToast('Please enter a valid email');
+    return;
+  }
+
+  if (authMode === 'signup') {
+    const users = getUsers();
+    if (users[email]) {
+      showToast('An account with this email already exists. Please sign in instead.');
+      return;
+    }
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('Please enter your name'); return; }
+    pendingName = name;
+  }
+
+  // For login, check if user exists and skip verification
+  if (authMode === 'login') {
+    const users = getUsers();
+    const user = users[email];
+    
+    if (!user) {
+      showToast('Wrong email. Please sign up if you don\'t have an account.');
+      return;
+    }
+    
+    if (user.password !== password) {
+      showToast('Wrong password. Please try again.');
+      return;
+    }
+
+    // Update user info
+    userName = user.name;
+    userEmail = email;
+    userRole = user.role || 'student';
+    records = loadUserRecords(email);
+    save();
+
+    // Reset login form fields
+    document.getElementById('f-email').value = '';
+    document.getElementById('f-password').value = '';
+
+    showToast(`Welcome back, ${userName.split(' ')[0]}!`);
+    if (userRole === 'teacher') {
+      goTo('teacher');
+    } else if (userRole === 'admin') {
+      goTo('admin');
+    } else {
+      goTo('dashboard');
+    }
+    return;
+  }
+
+  // Store pending auth data
+  pendingEmail = email;
+  pendingPassword = password;
+
+  // Show verification form
+  document.getElementById('login-form-section').style.display = 'none';
+  document.getElementById('verification-form-section').style.display = 'block';
+  document.getElementById('verification-email-text').textContent = `Code sent to ${email}`;
+  document.getElementById('f-verification-code').value = '';
+  document.getElementById('f-verification-code').focus();
+
+  // Send verification code
+  sendVerificationCode(email);
+}
+
+// Allow pressing Enter in the login form to submit
+document.querySelectorAll('#f-email, #f-password').forEach(el => {
+  el.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleAuth();
+    }
+  });
+});
+
+// Allow pressing Enter in the verification code field to submit
+const verificationInput = document.getElementById('f-verification-code');
+if (verificationInput) {
+  verificationInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      verifyEmailCode();
+    }
+  });
+}
+
+function resendVerificationCode() {
+  if (pendingEmail) {
+    sendVerificationCode(pendingEmail);
+    showToast('New code sent!');
+    document.getElementById('verify-code-btn').style.display = 'block';
+    document.getElementById('f-verification-code').disabled = false;
+  }
+}
+
+function goBackToEmailEntry() {
+  document.getElementById('login-form-section').style.display = 'block';
+  document.getElementById('verification-form-section').style.display = 'none';
+  document.getElementById('verification-code-display').style.display = 'none';
+  document.getElementById('verify-code-btn').style.display = 'block';
+  document.getElementById('f-verification-code').disabled = false;
+  verificationCode = '';
+  pendingEmail = '';
+  pendingPassword = '';
+}
+
+function verifyEmailCode() {
+  const enteredCode = document.getElementById('f-verification-code').value.trim();
+
+  if (!enteredCode) { showToast('Please enter the verification code'); return; }
+  if (enteredCode !== verificationCode) { showToast('Invalid verification code'); return; }
+
+  // Normalize pendingEmail just in case, though it should be handled in handleAuth
+  const email = (pendingEmail || '').toLowerCase();
+
+  // Get student data from database or create new
+  const studentData = studentDatabase[email] || {
+    name: pendingName || email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    image: '👤',
+    color: '#4F46E5'
+  };
+
+  // Update user info and load this user's records
+  userName = studentData.name;
+  userEmail = email;
+  records = loadUserRecords(userEmail);
+  
+  // Save user credentials and data
+  saveUser(userEmail, pendingPassword, userName, userRole);
+  save();
+
+  // Reset login form fields
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-password').value = '';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-verification-code').disabled = false;
+
+  showToast(`Verification successful!`);
+  if (userRole === 'teacher') {
+    goTo('teacher');
+  } else if (userRole === 'admin') {
+    goTo('admin');
+  } else {
+    goTo('dashboard');
+  }
+}
+
+function logout() {
+  closeModal('modal-logout');
+  userEmail = '';
+  userName = 'Student';
+  userRole = 'student';
+  records = [];
+  selectedIds.clear();
+  localStorage.removeItem('lm_user');
+  setTimeout(() => {
+    goTo('login');
+    document.getElementById('login-form-section').style.display = 'block';
+    document.getElementById('verification-form-section').style.display = 'none';
+    document.getElementById('verification-code-display').style.display = 'none';
+    document.getElementById('verify-code-btn').style.display = 'block';
+    document.getElementById('f-verification-code').disabled = false;
+  }, 200);
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────
+function renderDashboard() {
+  load();
+
+  // Get student data
+  const studentData = studentDatabase[userEmail] || {
+    name: userName,
+    image: userEmoji,
+    color: '#4F46E5'
+  };
+
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning,' : hour < 17 ? 'Good afternoon,' : 'Good evening,';
+  document.getElementById('dash-greeting').textContent = greet;
+  const displayName = studentData.name.split(' ')[0];
+  document.getElementById('dash-name').textContent = displayName;
+  
+  // Update avatar with student image
+  const avatarEl = document.getElementById('dash-avatar');
+  avatarEl.textContent = studentData.image;
+  avatarEl.style.background = studentData.color + '33';
+  avatarEl.style.color = studentData.color;
+  avatarEl.style.borderColor = studentData.color + '66';
+
+  // Update dropdown email
+  document.getElementById('dropdown-email').textContent = userEmail;
+
+  // Stats
+  document.getElementById('stat-total').textContent = records.length;
+  const totalMins = records.reduce((a, r) => a + (r.duration || 0), 0);
+  document.getElementById('stat-hours').textContent = (totalMins / 60).toFixed(1) + 'h';
+
+  // Streak
+  let streak = 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const dstr = d.toISOString().split('T')[0];
+    if (records.some(r => r.date === dstr)) streak++;
+    else break;
+  }
+  document.getElementById('stat-streak').textContent = streak;
+
+  // Week bars
+  const todayDate = new Date();
+  const dow = todayDate.getDay();
+  const days = ['S','M','T','W','T','F','S'];
+  const wbContainer = document.getElementById('week-bars');
+  wbContainer.innerHTML = '';
+  const weekDates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(todayDate);
+    d.setDate(todayDate.getDate() - dow + i);
+    weekDates.push(d);
+    const dstr = d.toISOString().split('T')[0];
+    const dayRecs = records.filter(r => r.date === dstr);
+    let color = 'empty', height = 6;
+    if (dayRecs.length > 0) {
+      const perfs = dayRecs.map(r => r.perf);
+      color = perfs.includes('green') ? 'green' : perfs.includes('amber') ? 'amber' : 'red';
+      height = Math.min(44, 8 + dayRecs.length * 12);
+    }
+    const col = document.createElement('div');
+    col.className = 'week-bar-col';
+    col.innerHTML = `<div class="week-bar-wrap"><div class="week-bar ${color}" style="height:${height}px"></div></div><div class="week-day-label">${days[i]}</div>`;
+    wbContainer.appendChild(col);
+  }
+  const mon = weekDates[1], sun = weekDates[0];
+  document.getElementById('week-range').textContent = fmtShort(weekDates[1]) + '–' + fmtShort(weekDates[6]);
+
+  // Recent
+  const rl = document.getElementById('recent-list');
+  if (records.length === 0) {
+    rl.innerHTML = '<div class="empty-state" style="padding:24px 0;"><div style="font-size:13px;color:var(--text2);">No sessions yet. Tap <b>Add record</b> to start!</div></div>';
+    return;
+  }
+  rl.innerHTML = '';
+  records.slice(0, 5).forEach(rec => {
+    const c = document.createElement('div');
+    c.className = 'recent-card';
+    c.onclick = () => goTo('records');
+    const perfColor = rec.perf === 'green' ? '#10B981' : rec.perf === 'red' ? '#EF4444' : '#F59E0B';
+    const emoji = getSubjectEmoji(rec.subject);
+    c.innerHTML = `
+      <div class="recent-subj-dot" style="background:${perfColor}"></div>
+      <div style="font-size:18px;">${emoji}</div>
+      <div class="recent-info">
+        <div class="recent-subject">${esc(rec.subject)}</div>
+        <div class="recent-topic">${esc(rec.topic)}</div>
+      </div>
+      <div class="recent-right">
+        <div class="recent-time">${rec.duration}m</div>
+        <div class="recent-perf" style="color:${perfColor}">${rec.perf === 'green' ? '🟢' : rec.perf === 'red' ? '🔴' : '🟡'}</div>
+      </div>`;
+    rl.appendChild(c);
+  });
+}
+
+// ── AVATAR DROPDOWN ────────────────────────────────────────
+function toggleAvatarDropdown() {
+  const dropdown = document.getElementById('avatar-dropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── ADD RECORD ─────────────────────────────────────────────
+function initAddForm() {
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  selectedPerf = 'amber';
+  selectedMood = '';
+  renderPerfBtns();
+  renderMoodBtns();
+}
+
+function selectPerf(p) {
+  selectedPerf = p;
+  renderPerfBtns();
+}
+
+function renderPerfBtns() {
+  ['green','amber','red'].forEach(p => {
+    const btn = document.getElementById('pb-' + p);
+    btn.className = 'perf-btn' + (p === selectedPerf ? ' sel-' + p : '');
+  });
+}
+
+function selectMood(m) {
+  selectedMood = selectedMood === m ? '' : m;
+  renderMoodBtns();
+}
+
+function renderMoodBtns() {
+  ['focused','tired','happy','stressed'].forEach(m => {
+    const btn = document.getElementById('mood-' + m);
+    if (btn) btn.className = 'perf-btn' + (m === selectedMood ? ' sel-green' : '');
+  });
+}
+
+function updateCharCount(el, countId, max) {
+  document.getElementById(countId).textContent = el.value.length;
+}
+
+function clearForm() {
+  ['f-subject','f-topic','f-duration','f-notes','f-custom-subject'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-materials').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('notes-count').textContent = '0';
+  selectedPerf = 'amber';
+  selectedMood = '';
+  renderPerfBtns();
+  renderMoodBtns();
+}
+
+function saveRecord() {
+  const subjectEl = document.getElementById('f-subject');
+  const customEl = document.getElementById('f-custom-subject');
+  let subject = subjectEl.value === 'Other' ? customEl.value.trim() : subjectEl.value.trim();
+  const topic = document.getElementById('f-topic').value.trim();
+  const duration = parseInt(document.getElementById('f-duration').value) || 0;
+  const date = document.getElementById('f-date').value;
+  const notes = document.getElementById('f-notes').value.trim();
+  const materials = document.getElementById('f-materials').value;
+
+  if (!subject) { showToast('Please select or enter a subject'); return; }
+  if (!topic) { showToast('Please enter a topic'); return; }
+  if (!duration || duration < 1) { showToast('Please enter a valid duration'); return; }
+  if (!date) { showToast('Please select a date'); return; }
+
+  load();
+  const rec = {
+    id: Date.now(),
+    subject, topic, duration, date,
+    notes, materials,
+    perf: selectedPerf,
+    mood: selectedMood,
+    created: new Date().toISOString()
+  };
+  records.unshift(rec);
+  save();
+  clearForm();
+  showToast('Study record saved! 🎉');
+  goTo('dashboard');
+}
+
+// ── VIEW RECORDS ───────────────────────────────────────────
+function renderRecords(filter) {
+  load();
+  const list = document.getElementById('records-list');
+  const countEl = document.getElementById('rec-count');
+  let data = records;
+  if (filter) {
+    const q = filter.toLowerCase();
+    data = records.filter(r =>
+      r.subject.toLowerCase().includes(q) ||
+      r.topic.toLowerCase().includes(q) ||
+      (r.notes || '').toLowerCase().includes(q)
+    );
+  }
+  countEl.textContent = data.length;
+  if (data.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">${filter ? 'No results found' : 'No records yet'}</div><div class="empty-sub">${filter ? 'Try a different search term' : 'Add a study session to get started!'}</div></div>`;
+    return;
+  }
+  list.innerHTML = '';
+  data.forEach(rec => {
+    const card = document.createElement('div');
+    card.className = 'record-card' + (selectedIds.has(rec.id) ? ' selected' : '');
+    card.onclick = () => toggleSelect(rec.id, card);
+    const perfLabel = rec.perf === 'green' ? 'Good' : rec.perf === 'red' ? 'Low' : 'Average';
+    card.innerHTML = `
+      <div class="record-check">${selectedIds.has(rec.id) ? '✓' : ''}</div>
+      <div class="record-header">
+        <div class="record-subj-icon">${getSubjectEmoji(rec.subject)}</div>
+        <div class="record-subject">${esc(rec.subject)}</div>
+        <div class="record-perf-badge ${rec.perf}">${perfLabel}</div>
+      </div>
+      <div class="record-topic">${esc(rec.topic)}</div>
+      <div class="record-meta">
+        <div class="record-meta-chip"><span>⏱</span> ${rec.duration} min</div>
+        <div class="record-meta-chip"><span>📅</span> ${fmtDateFull(rec.date)}</div>
+        ${rec.materials ? `<div class="record-meta-chip"><span>📖</span> ${esc(rec.materials)}</div>` : ''}
+        ${rec.mood ? `<div class="record-meta-chip">${getMoodEmoji(rec.mood)} ${rec.mood}</div>` : ''}
+      </div>
+      ${rec.notes ? `<div class="record-notes">"${esc(rec.notes)}"</div>` : ''}`;
+    list.appendChild(card);
+  });
+  updateDelBtn();
+}
+
+function filterRecords() {
+  const q = document.getElementById('search-input').value.trim();
+  selectedIds.clear();
+  renderRecords(q || undefined);
+}
+
+function toggleSelect(id, card) {
+  if (selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  renderRecords(document.getElementById('search-input').value.trim() || undefined);
+}
+
+function toggleSelectAll() {
+  load();
+  if (selectedIds.size === records.length) selectedIds.clear();
+  else records.forEach(r => selectedIds.add(r.id));
+  renderRecords(document.getElementById('search-input').value.trim() || undefined);
+}
+
+function updateDelBtn() {
+  const btn = document.getElementById('del-btn');
+  if (!btn) return;
+  btn.disabled = selectedIds.size === 0;
+  btn.textContent = selectedIds.size > 0
+    ? `Delete ${selectedIds.size} record${selectedIds.size !== 1 ? 's' : ''}`
+    : 'Delete selected';
+}
+
+function openDeleteModal() {
+  if (selectedIds.size === 0) return;
+  document.getElementById('delete-modal-sub').textContent =
+    `This will permanently delete ${selectedIds.size} record${selectedIds.size !== 1 ? 's' : ''}. This cannot be undone.`;
+  document.getElementById('modal-delete').classList.add('show');
+}
+
+function deleteSelected() {
+  load();
+  records = records.filter(r => !selectedIds.has(r.id));
+  save();
+  selectedIds.clear();
+  closeModal('modal-delete');
+  showToast('Records deleted');
+  renderRecords();
+}
+
+// ── PERFORMANCE ────────────────────────────────────────────
+function renderPerformance() {
+  load();
+
+  // Summary
+  const totalMins = records.reduce((a, r) => a + (r.duration || 0), 0);
+  document.getElementById('p-sessions').textContent = records.length;
+  document.getElementById('p-hours').textContent = (totalMins / 60).toFixed(1) + 'h';
+
+  const today = new Date();
+  const dow = today.getDay();
+  let weekCount = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today); d.setDate(today.getDate() - dow + i);
+    const dstr = d.toISOString().split('T')[0];
+    weekCount += records.filter(r => r.date === dstr).length;
+  }
+  document.getElementById('p-week').textContent = weekCount;
+
+  // Best subject
+  const subjectMap = {};
+  records.forEach(r => {
+    if (!subjectMap[r.subject]) subjectMap[r.subject] = { count: 0, mins: 0 };
+    subjectMap[r.subject].count++;
+    subjectMap[r.subject].mins += r.duration || 0;
+  });
+  const best = Object.entries(subjectMap).sort((a, b) => b[1].mins - a[1].mins)[0];
+  document.getElementById('p-best').textContent = best ? best[0].split(' ')[0] : '–';
+  document.getElementById('p-best-sub').textContent = best ? Math.round(best[1].mins/60*10)/10 + 'h' : '';
+
+  // Bar chart (7 days)
+  const chartEl = document.getElementById('perf-bar-chart');
+  chartEl.innerHTML = '';
+  const days = ['S','M','T','W','T','F','S'];
+  const weekDates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today); d.setDate(today.getDate() - dow + i);
+    weekDates.push(d);
+  }
+  document.getElementById('perf-week-range').textContent = fmtShort(weekDates[1]) + '–' + fmtShort(weekDates[6]);
+
+  const dayCounts = weekDates.map(d => {
+    const dstr = d.toISOString().split('T')[0];
+    return records.filter(r => r.date === dstr).length;
+  });
+  const maxCount = Math.max(...dayCounts, 1);
+
+  weekDates.forEach((d, i) => {
+    const n = dayCounts[i];
+    const pct = Math.round((n / maxCount) * 100);
+    const barH = Math.max(4, pct * 0.9);
+    const col = document.createElement('div');
+    col.className = 'bar-chart-col';
+    const dstr = d.toISOString().split('T')[0];
+    const dayRecs = records.filter(r => r.date === dstr);
+    const color = dayRecs.length === 0 ? '#E5E7EB' :
+      dayRecs.some(r => r.perf === 'green') ? '#10B981' :
+      dayRecs.some(r => r.perf === 'amber') ? '#F59E0B' : '#EF4444';
+    col.innerHTML = `
+      <div class="bar-chart-bar-wrap">
+        <div class="bar-chart-bar" style="height:${barH}%;background:${color};position:relative;">
+          ${n > 0 ? `<div class="bar-chart-val">${n}</div>` : ''}
+        </div>
+      </div>
+      <div class="bar-chart-label">${days[i]}</div>`;
+    chartEl.appendChild(col);
+  });
+
+  // Subject breakdown
+  const breakdownEl = document.getElementById('subject-breakdown');
+  breakdownEl.innerHTML = '';
+  const subjectColors = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#F97316'];
+  const sorted = Object.entries(subjectMap).sort((a,b) => b[1].mins - a[1].mins).slice(0, 6);
+  const maxMins = sorted[0]?.[1].mins || 1;
+  sorted.forEach(([subject, data], i) => {
+    const pct = Math.round((data.mins / maxMins) * 100);
+    const row = document.createElement('div');
+    row.className = 'subject-row';
+    row.innerHTML = `
+      <div class="subject-dot" style="background:${subjectColors[i % subjectColors.length]}"></div>
+      <div class="subject-name">${esc(subject)}</div>
+      <div class="subject-bar-wrap"><div class="subject-bar-fill" style="width:${pct}%;background:${subjectColors[i % subjectColors.length]}"></div></div>
+      <div class="subject-time">${Math.round(data.mins/60*10)/10}h</div>`;
+    breakdownEl.appendChild(row);
+  });
+  if (sorted.length === 0) breakdownEl.innerHTML = '<div style="font-size:13px;color:var(--text2);text-align:center;padding:20px 0;">No data yet</div>';
+
+  // Performance history list
+  const histEl = document.getElementById('perf-history-list');
+  histEl.innerHTML = '';
+  records.slice(0, 8).forEach(rec => {
+    const perfColor = rec.perf === 'green' ? '#10B981' : rec.perf === 'red' ? '#EF4444' : '#F59E0B';
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);';
+    div.innerHTML = `
+      <div style="width:8px;height:8px;border-radius:50%;background:${perfColor};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;color:var(--text);">${esc(rec.subject)}</div>
+        <div style="font-size:11px;color:var(--text2);">${esc(rec.topic)}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:12px;color:var(--text2);">${rec.duration}m</div>
+        <div style="font-size:10px;color:var(--text3);">${fmtDateFull(rec.date)}</div>
+      </div>`;
+    histEl.appendChild(div);
+  });
+  if (records.length === 0) histEl.innerHTML = '<div style="font-size:13px;color:var(--text2);text-align:center;padding:20px 0;">No records yet</div>';
+}
+
+// ── MUSIC ──────────────────────────────────────────────────
+let currentPlayingTrack = null;
+let audioContext = null;
+
+function initAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioContext;
+}
+
+function playTrack(track) {
+  const playBtn = document.getElementById('play-' + track);
+  const isPlaying = playBtn.textContent === '⏸️';
+  
+  // Stop any currently playing track
+  if (currentPlayingTrack && currentPlayingTrack !== track) {
+    const prevBtn = document.getElementById('play-' + currentPlayingTrack);
+    prevBtn.textContent = '▶️';
+    stopAmbientSound(currentPlayingTrack);
+  }
+  
+  if (!isPlaying) {
+    // Start playing
+    playBtn.textContent = '⏸️';
+    currentPlayingTrack = track;
+    playAmbientSound(track);
+    showToast(`Playing ${track.charAt(0).toUpperCase() + track.slice(1)}`);
+    document.getElementById('music-indicator').style.display = 'inline';
+  } else {
+    // Pause
+    playBtn.textContent = '▶️';
+    currentPlayingTrack = null;
+    stopAmbientSound(track);
+    showToast('Paused');
+    document.getElementById('music-indicator').style.display = 'none';
+  }
+}
+
+function playAmbientSound(track) {
+  const ctx = initAudioContext();
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+  }
+  
+  const oscillator = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+  
+  oscillator.connect(filter);
+  filter.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  
+  // Different sounds for different tracks
+  switch(track) {
+    case 'focus':
+      oscillator.frequency.setValueAtTime(440, ctx.currentTime); // A4 note
+      oscillator.type = 'sine';
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(800, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+      // Add some modulation
+      const focusLFO = ctx.createOscillator();
+      const focusGain = ctx.createGain();
+      focusLFO.frequency.setValueAtTime(0.5, ctx.currentTime);
+      focusGain.gain.setValueAtTime(20, ctx.currentTime);
+      focusLFO.connect(focusGain);
+      focusGain.connect(oscillator.frequency);
+      focusLFO.start();
+      window['lfo_' + track] = focusLFO;
+      break;
+      
+    case 'rain':
+      // Create noise for rain
+      const bufferSize = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+      const noiseSource = ctx.createBufferSource();
+      noiseSource.buffer = buffer;
+      noiseSource.loop = true;
+      
+      const rainFilter = ctx.createBiquadFilter();
+      rainFilter.type = 'bandpass';
+      rainFilter.frequency.setValueAtTime(1000, ctx.currentTime);
+      rainFilter.Q.setValueAtTime(0.5, ctx.currentTime);
+      
+      noiseSource.connect(rainFilter);
+      rainFilter.connect(gainNode);
+      gainNode.gain.setValueAtTime(0.05, ctx.currentTime);
+      noiseSource.start();
+      window['noise_' + track] = noiseSource;
+      return; // Different handling for noise
+      
+    case 'lofi':
+      oscillator.frequency.setValueAtTime(330, ctx.currentTime); // E4 note
+      oscillator.type = 'triangle';
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(600, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+      break;
+      
+    case 'ocean':
+      oscillator.frequency.setValueAtTime(150, ctx.currentTime); // Very low
+      oscillator.type = 'sine';
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(300, ctx.currentTime);
+      gainNode.gain.setValueAtTime(0.06, ctx.currentTime);
+      // Slow modulation for ocean waves
+      const oceanLFO = ctx.createOscillator();
+      const oceanGain = ctx.createGain();
+      oceanLFO.frequency.setValueAtTime(0.2, ctx.currentTime);
+      oceanGain.gain.setValueAtTime(10, ctx.currentTime);
+      oceanLFO.connect(oceanGain);
+      oceanGain.connect(oscillator.frequency);
+      oceanLFO.start();
+      window['lfo_' + track] = oceanLFO;
+      break;
+  }
+  
+  oscillator.start();
+  
+  // Store references to stop later
+  window['osc_' + track] = oscillator;
+  window['gain_' + track] = gainNode;
+  window['filter_' + track] = filter;
+}
+
+function stopAmbientSound(track) {
+  if (window['osc_' + track]) {
+    window['osc_' + track].stop();
+    delete window['osc_' + track];
+  }
+  if (window['noise_' + track]) {
+    window['noise_' + track].stop();
+    delete window['noise_' + track];
+  }
+  if (window['lfo_' + track]) {
+    window['lfo_' + track].stop();
+    delete window['lfo_' + track];
+  }
+  delete window['gain_' + track];
+  delete window['filter_' + track];
+}
+
+function stopAllMusic() {
+  ['focus', 'rain', 'lofi', 'ocean'].forEach(track => {
+    stopAmbientSound(track);
+    const btn = document.getElementById('play-' + track);
+    if (btn) btn.textContent = '▶️';
+  });
+  currentPlayingTrack = null;
+  document.getElementById('music-indicator').style.display = 'none';
+}
+
+// ── CREATIVE ───────────────────────────────────────────────
+function renderCreative() {
+  // Load saved journal if any
+  const journalText = localStorage.getItem('lm_journal_' + userEmail) || '';
+  document.getElementById('journal-text').value = journalText;
+}
+
+function switchCreativeTab(tab) {
+  // Update tabs
+  document.querySelectorAll('.creative-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  
+  // Update content
+  document.querySelectorAll('.creative-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('creative-' + tab).classList.add('active');
+}
+
+function saveJournal() {
+  const text = document.getElementById('journal-text').value;
+  localStorage.setItem('lm_journal_' + userEmail, text);
+  showToast('Journal saved!');
+}
+
+function startMeditation() {
+  let timeLeft = 300; // 5 minutes
+  const timerEl = document.getElementById('meditation-timer');
+  timerEl.style.display = 'block';
+  
+  const interval = setInterval(() => {
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    timerEl.textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    timeLeft--;
+    
+    if (timeLeft < 0) {
+      clearInterval(interval);
+      timerEl.textContent = 'Done! 🧘‍♀️';
+      showToast('Meditation complete! Feeling refreshed?');
+      setTimeout(() => timerEl.style.display = 'none', 3000);
+    }
+  }, 1000);
+  
+  showToast('Meditation started - breathe deeply');
+}
+
+// ── SETTINGS ───────────────────────────────────────────────
+function renderSettings() {
+  load();
+  
+  // Get student data
+  const studentData = studentDatabase[userEmail] || {
+    name: userName,
+    image: userEmoji,
+    color: '#4F46E5'
+  };
+
+  document.getElementById('profile-name').textContent = studentData.name;
+  document.getElementById('profile-email').textContent = userEmail;
+  
+  const profileAvatar = document.getElementById('profile-avatar');
+  profileAvatar.textContent = studentData.image;
+  profileAvatar.style.background = studentData.color + '33';
+  profileAvatar.style.color = studentData.color;
+
+  // Set dark mode toggle
+  const toggle = document.getElementById('toggle-dark');
+  if (toggle) {
+    toggle.classList.toggle('on', isDarkMode);
+  }
+
+  // Set text size
+  const textSizeEl = document.querySelector('.settings-row-right');
+  if (textSizeEl) {
+    textSizeEl.textContent = textSize.charAt(0).toUpperCase() + textSize.slice(1) + ' ›';
+  }
+
+  // Set toggles
+  const notifToggle = document.getElementById('toggle-notif');
+  if (notifToggle) {
+    notifToggle.classList.toggle('on', notificationsEnabled);
+  }
+  const twoFaToggle = document.getElementById('toggle-2fa');
+  if (twoFaToggle) {
+    twoFaToggle.classList.toggle('on', twoFactorEnabled);
+  }
+  const backupToggle = document.getElementById('toggle-backup');
+  if (backupToggle) {
+    backupToggle.classList.toggle('on', autoBackupEnabled);
+  }
+}
+
+function toggleDarkMode(el) {
+  el.classList.toggle('on');
+  isDarkMode = el.classList.contains('on');
+  document.body.classList.toggle('dark-mode', isDarkMode);
+  save();
+  showToast(isDarkMode ? 'Dark mode on' : 'Dark mode off');
+}
+
+function cycleTextSize() {
+  textSize = textSize === 'small' ? 'medium' : textSize === 'medium' ? 'large' : 'small';
+  applyTextSize();
+  save();
+  renderSettings();
+  showToast(`Text size: ${textSize.charAt(0).toUpperCase() + textSize.slice(1)}`);
+}
+
+function applyTextSize() {
+  const sizes = { small: '14px', medium: '16px', large: '18px' };
+  document.documentElement.style.setProperty('--base-font-size', sizes[textSize]);
+}
+
+function cycleEmoji() {
+  const emojis = ['👤', '👨‍🎓', '👩‍🎓', '🎓', '📚', '✨', '🌟', '🚀', '💡', '🎯'];
+  const currentIndex = emojis.indexOf(userEmoji);
+  userEmoji = emojis[(currentIndex + 1) % emojis.length];
+  save();
+  renderSettings();
+  renderDashboard();
+  showToast(`Icon updated to ${userEmoji}`);
+}
+
+function toggleNotifications(el) {
+  el.classList.toggle('on');
+  notificationsEnabled = el.classList.contains('on');
+  save();
+  showToast(notificationsEnabled ? 'Notifications enabled' : 'Notifications disabled');
+}
+
+function toggleTwoFactor(el) {
+  el.classList.toggle('on');
+  twoFactorEnabled = el.classList.contains('on');
+  save();
+  showToast(twoFactorEnabled ? 'Two-factor auth enabled' : 'Two-factor auth disabled');
+}
+
+function toggleAutoBackup(el) {
+  el.classList.toggle('on');
+  autoBackupEnabled = el.classList.contains('on');
+  if (autoBackupEnabled) {
+    performBackup();
+  }
+  save();
+  showToast(autoBackupEnabled ? 'Auto backup enabled' : 'Auto backup disabled');
+}
+
+function performBackup() {
+  try {
+    const backupData = {
+      records: records,
+      timestamp: new Date().toISOString(),
+      userEmail: userEmail
+    };
+    localStorage.setItem('lm_backup_' + userEmail, JSON.stringify(backupData));
+  } catch(e) {}
+}
+
+function setTheme(color, dark, el) {
+  document.documentElement.style.setProperty('--brand', color);
+  document.documentElement.style.setProperty('--brand-dark', dark);
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  showToast('Theme updated!');
+}
+
+function showExportModal() {
+  document.getElementById('modal-export').classList.add('show');
+}
+
+function exportCSV() {
+  load();
+  const headers = ['Subject','Topic','Duration (mins)','Date','Performance','Mood','Materials','Notes'];
+  const rows = records.map(r => [
+    r.subject, r.topic, r.duration, r.date,
+    r.perf, r.mood || '', r.materials || '',
+    (r.notes || '').replace(/,/g, ';')
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'learnmate_records.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  closeModal('modal-export');
+  showToast('Records exported as CSV!');
+}
+
+// ── MODALS ─────────────────────────────────────────────────
+function openLogoutModal() { document.getElementById('modal-logout').classList.add('show'); }
+function openAboutModal() { document.getElementById('modal-about').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+function openPrivacyModal() { document.getElementById('modal-privacy').classList.add('show'); }
+function showDeleteAllModal() { 
+  closeModal('modal-privacy');
+  document.getElementById('modal-delete-all').classList.add('show'); 
+}
+function deleteAllData() {
+  records = [];
+  save();
+  closeModal('modal-delete-all');
+  showToast('All data deleted');
+  renderDashboard();
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('show');
+  });
+});
+
+// ── TOAST ──────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── HELPERS ────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtShort(d) {
+  if (!d) return '';
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+
+function fmtDateFull(dstr) {
+  if (!dstr) return '';
+  const d = new Date(dstr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function getSubjectEmoji(subject) {
+  const s = (subject || '').toLowerCase();
+  if (s.includes('math')) return '🔢';
+  if (s.includes('science') || s.includes('biology') || s.includes('chem')) return '🔬';
+  if (s.includes('physics')) return '⚛️';
+  if (s.includes('english') || s.includes('literature') || s.includes('lit')) return '📖';
+  if (s.includes('history')) return '🏛️';
+  if (s.includes('geography') || s.includes('geo')) return '🌍';
+  if (s.includes('computer') || s.includes('cs')) return '💻';
+  if (s.includes('economics') || s.includes('econ')) return '📈';
+  if (s.includes('art')) return '🎨';
+  if (s.includes('music')) return '🎵';
+  if (s.includes('physical') || s.includes('pe')) return '⚽';
+  return '📚';
+}
+
+function getMoodEmoji(mood) {
+  const map = { focused:'🎯', tired:'😴', happy:'😊', stressed:'😰' };
+  return map[mood] || '';
+}
+
+// ── INIT ───────────────────────────────────────────────────
+load();
+if (isDarkMode) document.body.classList.add('dark-mode');
+applyTextSize();
+
+// Stop music when page unloads
+window.addEventListener('beforeunload', function() {
+  if (currentPlayingTrack) {
+    stopAllMusic();
+  }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const dropdown = document.getElementById('avatar-dropdown');
+  const avatar = document.getElementById('dash-avatar');
+  if (dropdown && dropdown.style.display === 'block' && !avatar.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
